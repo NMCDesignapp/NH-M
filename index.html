@@ -265,6 +265,7 @@
         .btn-sync.loading { pointer-events: none; opacity: .7; }
 
         /* --- KPI CARDS (MAIN) --- */
+        .kpi-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
         
         .kpi-card {
             position: relative;
@@ -342,6 +343,7 @@
         .sub-num { font-weight: 900; color: #f3efe7; }
 
         /* Company Card Specifics */
+        #kpi-company { margin-top: 32px; }
         .kpi-cty {
             background: linear-gradient(180deg, #1b2f49, #172a43);
             border: 1.5px solid #d6a34866;
@@ -2703,6 +2705,9 @@
                 <button class="btn-retry" onclick="syncData()">Thử lại</button>
             </div>
 
+            <!-- Company KPI Card -->
+            <div id="kpi-company" style="display:none"></div>
+
             <!-- Navigation Grid -->
             <nav class="nav-grid" id="nav-grid" style="display:none" aria-label="Điều hướng">
                 <button class="nav-btn nav-detail" onclick="go('view-detail')">
@@ -2719,12 +2724,14 @@
                 </button>
             </nav>
 
+            <!-- Thông báo chạy cuộn dọc (thay thế thẻ phòng/nhân viên) -->
             <div class="notify-marquee-wrap" id="notify-marquee-wrap" style="display:none">
                 <div class="notify-marquee-label"><i class="fa-solid fa-bullhorn"></i> Thông báo</div>
                 <div class="notify-marquee-box">
                     <div class="notify-marquee-track" id="notify-marquee-track"></div>
                 </div>
             </div>
+
             <div class="section-divider" id="link-divider" style="display:none">Liên kết</div>
             <div class="link-grid" id="link-grid" style="display:none"></div>
         </section>
@@ -3346,7 +3353,7 @@
             } else {
                 $('skeleton-main').style.display = '';
             }
-            var els = ['error-main', 'nav-grid', 'notify-marquee-wrap', 'link-divider', 'link-grid'];
+            var els = ['error-main', 'kpi-company', 'nav-grid', 'notify-marquee-wrap', 'link-divider', 'link-grid'];
             for (var i = 0; i < els.length; i++) { var el = $(els[i]); if (el) el.style.display = 'none'; }
 
             try {
@@ -3478,15 +3485,16 @@
         function renderMain(ky) {
             var kyRows = DATA.filter(function(x) { return x.ky === ky; });
             var list = kyRows.filter(function(x) { return x.ten_nhan_vien; });
-            var box = null;
+            var ctyBox = $('kpi-company');
+            ctyBox.innerHTML = '';
             dashboardState.ky = ky;
             dashboardState.adGroups = {};
             renderNoticeBar(ky);
             renderLinkButtons(ky);
             
+            $('kpi-company').style.display = '';
             $('nav-grid').style.display = '';
 
-            // Vẫn tính toán dữ liệu phòng/nhân viên cho trang Chi tiết nhóm
             var total = { ten: 'Công Ty', afyp: 0, kh: 0, lhd: 0, td: 0, hdChuan: 0, tyTrong: 0, tyTrongWeighted: 0, tyTrongCount: 0 }, delay = 0;
             var htmlParts = [];
 
@@ -3556,8 +3564,8 @@
 
             total.tyTrong = total.tyTrongCount? (total.tyTrongWeighted / total.tyTrongCount) : 0;
 
-            // Không hiển thị thẻ phòng/nhân viên trên trang chính nữa
-            // Dữ liệu vẫn được tính để trang Chi tiết nhóm hoạt động bình thường
+            ctyBox.innerHTML = buildCtyCard(total);
+            triggerAnimations();
         }
 
         function subsHTML(lhd, td, hdc, cls) {
