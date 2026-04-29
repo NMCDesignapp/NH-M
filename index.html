@@ -4,7 +4,872 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KPI BVNT An Giang</title>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KPI BVNT An Giang</title>
     <meta name="theme-color" content="#0b0f14">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="KPI BVNT">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PapaParse for CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Vercel Web Analytics -->
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Vercel Speed Insights -->
+    <script>
+        window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+           --bg: #021616;
+            --bg2: #032c2c;
+            --bg-card: #171f2b;
+            --fg: #f3efe7;
+            --muted: #9a9184;
+            --accent: #6cc78a;
+            --accent-strong: #ffc505;
+            --accent-glow: #b1a85552;
+            --green: #659c6c;
+            --red: #9f5f52;
+            --blue: #7d8ca3;
+            --border: #ffffff1a;
+            --gold: #c6a56a;
+            --track: #201a14;
+            --track-fill: #d8bb86;
+            --track-soft: #6f5740;
+            --notice-h: 44px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+        button { border: none; background: none; padding: 0; margin: 0; font: inherit; color: inherit; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+        button:focus { outline: none; }
+        button:focus-visible { outline: none; }
+        
+        body {
+            background: var(--bg);
+            font-family: Tahoma, Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--fg);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        /* --- BACKGROUND ANIMATION --- */
+        .bg-scene {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            background: radial-gradient(ellipse at 30% 20%, #0e2240 0%, var(--bg) 70%);
+        }
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: .18;
+            animation: orbFloat 18s ease-in-out infinite alternate;
+            will-change: transform;
+        }
+        .bg-orb-1 { width: 500px; height: 500px; background: #091c36; top: -15%; left: -10%; }
+        .bg-orb-2 { width: 400px; height: 400px; background: #0b1530; bottom: -10%; right: -10%; animation-delay: -6s; }
+        .bg-orb-3 { width: 300px; height: 300px; background: #0d2040; top: 50%; left: 60%; animation-delay: -12s; }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -40px) scale(1.08); }
+            100% { transform: translate(-15px, 15px) scale(.95); }
+        }
+
+        /* --- LAYOUT UTILITIES --- */
+        .app-wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 24px 16px 24px;
+        }
+        body.has-notice .app-wrap { padding-top: calc(24px + var(--notice-h) + 12px); }
+
+        .view { display: none; animation: viewIn .4s ease-out; content-visibility: hidden; }
+        .view.active { display: block; content-visibility: visible; }
+        
+        @keyframes viewIn {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- TYPOGRAPHY --- */
+        .hero-title {
+            font-family: Tahoma, Arial, Helvetica, sans-serif;
+            font-size: clamp(2rem, 7vw, 3rem);
+            font-weight: 900;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #ffffff 0%, #dff4ff 28%, #8fd0ff 54%, #6cc78a 82%, #d7fff0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 8px 22px #8fd0ff22;
+        }
+        .hero-sub {
+            font-size: 11px;
+            font-weight: 800;
+            color: #d9b65a;
+            text-transform: uppercase;
+            letter-spacing: .18em;
+            margin-top: 4px;
+        }
+
+        /* --- CONTROLS --- */
+        .ctrl-bar { display: flex; gap: 8px; margin-top: 20px; flex-wrap: nowrap; align-items: stretch; }
+        
+        .ctrl-select-wrap {
+            position: relative;
+            flex: 1 1 0;
+            min-width: 0;
+            width: auto;
+        }
+        .ctrl-select {
+            width: 100%;
+            height: 48px;
+            padding: 0;
+            border-radius: 12px;
+            background: rgba(212, 168, 67, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid #d4a84373;
+            color: #f2d38d;
+            font-weight: 800;
+            font-size: 13px;
+            outline: none;
+            font-family: inherit;
+            cursor: pointer;
+            appearance: none;
+            background-image: none;
+            background-repeat: no-repeat;
+            background-position: center;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .ctrl-select::before {
+            content: '\f073';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 16px;
+            color: #d4a843;
+            line-height: 1;
+        }
+        .ctrl-date-pill {
+            flex: 1 1 0;
+            min-width: 0;
+            height: 48px;
+            padding: 0 14px;
+            border-radius: 12px;
+            background: rgba(212, 168, 67, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid #d4a84373;
+            color: #f4e3b2;
+            font-weight: 800;
+            font-size: 13px;
+            font-family: inherit;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: .04em;
+            user-select: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .ctrl-date-pill i { color: #d4a843; font-size: 13px; }
+        .ctrl-date-pill .cdp-day { color: #f2c14e; font-weight: 900; font-size: 14px; }
+        .ctrl-select-popup {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            width: 280px;
+            max-width: calc(100vw - 32px);
+            background: #12223bcc;
+            border: 1px solid #ffffff14;
+            border-radius: 12px;
+            box-shadow: 0 18px 36px #00000055;
+            backdrop-filter: blur(12px);
+            padding: 8px;
+            display: none;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 6px;
+            z-index: 30;
+            max-height: 238px;
+            overflow-y: auto;
+        }
+        .ctrl-select-wrap.open .ctrl-select-popup { display: grid; }
+        .ctrl-select-opt {
+            min-height: 34px;
+            border-radius: 9px;
+            border: 1px solid #ffffff10;
+            background: #ffffff08;
+            color: #dbe7f5;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .ctrl-select-opt:hover { background: #ffffff14; color: #fff; border-color: #ffffff22; }
+        .ctrl-select-opt.on {
+            background: linear-gradient(135deg, var(--accent), #f59e0b);
+            color: #000;
+            border-color: #f4c261;
+            box-shadow: 0 6px 18px #c6a56a45;
+        }
+
+        .btn-sync {
+            flex: 1 1 0;
+            height: 48px;
+            padding: 0 8px;
+            border-radius: 12px;
+            border: 1px solid #d4a84373;
+            cursor: pointer;
+            background: rgba(212, 168, 67, 0.08);
+            backdrop-filter: blur(8px);
+            color: #f2d38d;
+            font-weight: 900;
+            font-size: 13px;
+            font-family: inherit;
+            transition: transform .15s, background .2s, border-color .2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .btn-sync i { margin: 0 !important; color: #d4a843; }
+        .btn-sync:hover,
+        .ctrl-select:hover,
+        .ctrl-date-pill:hover { background: rgba(212, 168, 67, 0.14); border-color: #e0ba62; transform: translateY(-1px); }
+        .btn-sync:active { transform: scale(.96); }
+        .btn-sync.loading { pointer-events: none; opacity: .7; }
+
+        /* --- KPI CARDS (MAIN) --- */
+        .kpi-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
+        
+        .kpi-card {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform .25s ease, box-shadow .25s ease;
+            cursor: default;
+            contain: layout style paint;
+        }
+        .kpi-card:hover { transform: translateY(-2px); }
+
+        .mini-progress {
+            position: relative;
+            width: 92px;
+            height: 7px;
+            margin-top: 10px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: linear-gradient(90deg, #241c15, #17120e);
+            border: 1px solid #ffffff10;
+            box-shadow: inset 0 1px 2px #00000040;
+        }
+        .mini-progress-fill {
+            height: 100%;
+            width: 0;
+            border-radius: inherit;
+            transition: width 1s cubic-bezier(.22, 1, .36, 1);
+            background: linear-gradient(90deg, var(--track-soft), var(--track-fill));
+            box-shadow: 0 0 12px #d8bb8633;
+            will-change: width;
+        }
+        .mini-progress-cty { width: 108px; height: 8px; }
+        .mini-progress-cty .mini-progress-fill { background: linear-gradient(90deg, #7f6242, #e0c48c); }
+        .mini-progress-phong .mini-progress-fill { background: linear-gradient(90deg, #6f5740, #cfb07a); }
+        .mini-progress-ad .mini-progress-fill { background: linear-gradient(90deg, #655345, #b9986b); }
+        .kpi-card.glow-full {
+            position: relative;
+            box-shadow: 0 0 0 2px #f2d38d55, 0 18px 40px #00000052, 0 0 26px #f2d38d2e;
+        }
+        .kpi-card.glow-full::before,
+         .kpi-ad.glow-full::before {
+            content: 'HTKH';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 4;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #a8ffa8, #6fff6f);
+            color: #2d5c26;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: .05em;
+            box-shadow: 0 8px 18px #73f26e35;
+        }
+
+        /* Typography inside cards */
+        .afyp-kh-row { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; }
+        .afyp-big { font-weight: 900; line-height: 1.1; color: #fff; }
+        .kh-small { font-weight: 400; color: #b7aa982e; font-size: 0.8em; }
+        
+        .subs-row {
+            display: flex; gap: 0;
+            border-top: 1px solid #ffffff0f;
+            background: #0000001f;
+            border-radius: 0 0 10px 10px;
+        }
+        .sub-pill {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 2px;
+            padding: 4px 2px; background: #ffffff08;
+            border-right: 1px solid #ffffff08;
+        }
+        .sub-pill:last-child { border-right: none; }
+        .sub-label { font-weight: 600; color: #a79783; font-size: 8px; letter-spacing: .01em; }
+        .sub-num { font-weight: 900; color: #f3efe7; }
+
+        /* Company Card Specifics */
+        #kpi-company { margin-top: 32px; }
+        .kpi-cty {
+            background: linear-gradient(180deg, #1b2f49, #172a43);
+            border: 1.5px solid #d6a34866;
+            border-top: 4px solid #f2b24d;
+            box-shadow: 0 20px 50px #0000005c, inset 0 1px 0 #ffffff14;
+            padding: 18px 20px 22px; margin-bottom: 10px;
+        }
+        .kpi-cty.glow-full {
+            border-color: #f2d38d;
+            background: linear-gradient(180deg, #243a58, #1b2f49);
+            box-shadow: 0 0 0 2px #f2d38d6b, 0 24px 54px #00000066, 0 0 34px #f2d38d38, inset 0 1px 0 #ffffff1f;
+        }
+        .kpi-cty.glow-full .cty-pct-num,
+        .kpi-cty.glow-full .cty-name { color: #ffe0a3; }
+        .kpi-cty.glow-full .cty-progress { box-shadow: inset 0 1px 2px #00000033, 0 0 0 1px #ffe1a433; }
+        .cty-inner { position: relative; z-index: 1; }
+        .cty-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .cty-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #ff9f2f;
+            letter-spacing: .02em;
+        }
+        .cty-name i { color: #ffc46b; font-size: 16px; }
+        .cty-pct-num { font-size: clamp(2rem, 6vw, 2.5rem); font-weight: 900; line-height: 1; color: #e0c48c; }
+        .cty-body {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(180px, 340px);
+            gap: 18px;
+            align-items: center;
+        }
+        .cty .afyp-big { font-size: clamp(2rem, 6vw, 2.7rem); color: #ffffff; }
+        .cty .kh-small { font-size: clamp(.8rem, 2vw, 1rem); color: #5a83b8; font-weight: 700; }
+        .cty-progress {
+            width: 100%;
+            height: 22px;
+            border-radius: 999px;
+            background: #9cc6f04d;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px #00000033;
+        }
+
+        /* Thông báo cuộn mới */
+        .notification-container {
+            width: 100%;
+            height: 22px;
+            border-radius: 8px;
+            background: rgba(255, 215, 141, 0.1);
+            border: 1px solid rgba(255, 215, 141, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .notification-marquee {
+            position: absolute;
+            white-space: nowrap;
+            animation: marquee 20s linear infinite;
+            color: #ffd78d;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .notification-text {
+            display: inline-block;
+            padding: 0 20px;
+        }
+
+        /* TRANG CHI TIẾT NHÓM */
+        .header-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .btn-back {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(212, 168, 67, 0.1);
+            border: 1px solid #d4a84340;
+            color: #f2d38d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background: rgba(212, 168, 67, 0.2);
+            transform: translateX(-2px);
+        }
+
+        #group-title {
+            font-size: 1.5rem;
+            color: #ffc505;
+            margin: 0;
+        }
+
+        /* Thông tin nhóm */
+        .group-info-card {
+            background: linear-gradient(135deg, rgba(43, 32, 13, 0.6), rgba(27, 20, 8, 0.8));
+            border: 1px solid rgba(212, 168, 67, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .group-info-card h3 {
+            font-size: 1.5rem;
+            color: #ffc505;
+            margin-bottom: 12px;
+        }
+
+        .group-kpi {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #ffffff;
+        }
+
+        /* Grid thành viên */
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .member-card {
+            background: rgba(23, 31, 43, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .member-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .member-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6cc78a, #f59e0b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .member-info h4 {
+            margin: 0 0 8px 0;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .member-kpi {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            color: #9a9184;
+        }
+
+        .member-kpi span:last-child {
+            color: #f2d38d;
+            font-weight: 700;
+        }
+
+        .member-progress {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #6cc78a, #f59e0b);
+            border-radius: 3px;
+            transition: width 1s cubic-bezier(.22, 1, .36, 1);
+        }
+
+        /* Phần tử nhóm có thể click */
+        .group-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-scene">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+    </div>
+
+    <div class="app-wrap">
+        <!-- VIEW CHÍNH -->
+        <div id="view-main" class="view active">
+            <div class="text-center">
+                <h1 class="hero-title">KPI BVNT</h1>
+                <div class="hero-sub">Thống kê & Phân tích</div>
+            </div>
+
+            <div class="ctrl-bar">
+                <div class="ctrl-select-wrap">
+                    <button class="ctrl-select">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span id="current-period">Chọn kỳ</span>
+                    </button>
+                    <div class="ctrl-select-popup" id="period-popup">
+                        <!-- Các option sẽ được thêm bằng JS -->
+                    </div>
+                </div>
+                <div class="ctrl-date-pill">
+                    <i class="fas fa-calendar-day"></i>
+                    <span class="cdp-day">Hôm nay</span>
+                    <span id="current-date">DD/MM/YYYY</span>
+                </div>
+                <button class="btn-sync" id="sync-btn">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Đồng bộ</span>
+                </button>
+            </div>
+
+            <div class="kpi-stack" id="kpi-stack">
+                <!-- Các thẻ KPI nhóm sẽ được thêm tại đây -->
+            </div>
+
+            <!-- Phần công ty -->
+            <div id="kpi-company">
+                <div class="kpi-card kpi-cty glow-full">
+                    <div class="cty-inner">
+                        <div class="cty-head">
+                            <div class="cty-name">
+                                <i class="fas fa-flag"></i>
+                                <span>Công ty</span>
+                            </div>
+                            <div class="cty-pct-num">100%</div>
+                        </div>
+                        <div class="cty-body">
+                            <div class="afyp-kh-row">
+                                <div class="afyp-big">0</div>
+                                <div class="kh-small">KPI</div>
+                            </div>
+                            <div id="notification-scroller" class="notification-container">
+                                <div class="notification-marquee">
+                                    <span class="notification-text">Đang tải thông báo...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW CHI TIẾT NHÓM -->
+        <div id="view-group-detail" class="view">
+            <div class="header-group">
+                <button class="btn-back" onclick="switchView('main')">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 id="group-title">Chi tiết Nhóm</h2>
+            </div>
+            
+            <div class="group-summary">
+                <div class="group-info-card">
+                    <h3 id="group-name">Tên Nhóm</h3>
+                    <div class="group-kpi">
+                        <span class="kpi-label">KPI:</span>
+                        <span id="group-afyp">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="member-list">
+                <h4 style="color: #f2d38d; margin-bottom: 16px;">Thành viên</h4>
+                <div id="member-grid" class="member-grid">
+                    <!-- Thành viên sẽ được chèn tại đây -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Biến toàn cục
+        let data = [];
+        let currentView = 'main';
+
+        // Chuyển đổi view
+        function switchView(viewName) {
+            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+            document.getElementById(`view-${viewName}`).classList.add('active');
+            currentView = viewName;
+        }
+
+        // Hiển thị chi tiết nhóm
+        function showGroupDetail(groupId) {
+            const group = data.find(item => item.id === groupId);
+            if (!group) return;
+            
+            // Lấy tất cả thành viên của nhóm này
+            const members = data.filter(item => item.group_id === groupId);
+            
+            // Hiển thị thông tin nhóm
+            document.getElementById('group-title').textContent = `Nhóm: ${group.ten_nhom || 'Không có tên'}`;
+            document.getElementById('group-name').textContent = group.ten_nhom || 'Không có tên';
+            document.getElementById('group-afyp').textContent = formatNumber(group.afyp || 0);
+            
+            // Hiển thị danh sách thành viên
+            const memberGrid = document.getElementById('member-grid');
+            memberGrid.innerHTML = members.map(member => `
+                <div class="member-card">
+                    <div class="member-avatar">${(member.ten_nv || 'NV').charAt(0).toUpperCase()}</div>
+                    <div class="member-info">
+                        <h4>${member.ten_nv || 'Không có tên'}</h4>
+                        <div class="member-kpi">
+                            <span>KPI:</span>
+                            <span>${formatNumber(member.afyp || 0)}</span>
+                        </div>
+                        <div class="member-progress">
+                            <div class="progress-bar" style="width: ${Math.min(member.phan_tram || 0, 100)}%"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Chuyển sang view chi tiết
+            switchView('group-detail');
+        }
+
+        // Thiết lập thông báo cuộn
+        function setupNotificationScroller() {
+            const scroller = document.querySelector('.notification-marquee');
+            if (!scroller || !data || data.length === 0) return;
+            
+            // Lấy tất cả thông báo từ cột thong_bao1
+            const notifications = data
+                .filter(item => item.thong_bao1 && item.thong_bao1.trim() !== '')
+                .map(item => item.thong_bao1)
+                .filter((value, index, self) => self.indexOf(value) === index);
+            
+            if (notifications.length === 0) {
+                scroller.innerHTML = '<span class="notification-text">Không có thông báo</span>';
+                return;
+            }
+            
+            // Tạo nội dung cuộn
+            const marqueeContent = notifications
+                .map(notification => `<span class="notification-text">${notification}</span>`)
+                .join('<span class="separator"> • </span>');
+            
+            // Lặp lại nội dung để tạo hiệu ứng cuộn liên tục
+            scroller.innerHTML = marqueeContent + marqueeContent;
+        }
+
+        // Format số
+        function formatNumber(num) {
+            if (typeof num !== 'number') num = parseFloat(num) || 0;
+            return new Intl.NumberFormat('vi-VN').format(num);
+        }
+
+        // Tải dữ liệu mẫu
+        function loadSampleData() {
+            // Dữ liệu mẫu - bạn sẽ thay bằng dữ liệu thực từ CSV
+            data = [
+                {
+                    id: 1,
+                    group_id: 1,
+                    ten_nhom: "Nhóm A",
+                    ten_nv: "Nguyễn Văn A",
+                    afyp: 15000000,
+                    phan_tram: 75,
+                    thong_bao1: "Chào mừng đến với KPI BVNT An Giang!"
+                },
+                {
+                    id: 2,
+                    group_id: 1,
+                    ten_nhom: "Nhóm A",
+                    ten_nv: "Trần Thị B",
+                    afyp: 12000000,
+                    phan_tram: 60,
+                    thong_bao1: "Hôm nay là ngày làm việc hiệu quả"
+                },
+                {
+                    id: 3,
+                    group_id: 2,
+                    ten_nhom: "Nhóm B",
+                    ten_nv: "Lê Văn C",
+                    afyp: 18000000,
+                    phan_tram: 90,
+                    thong_bao1: "Nhớ cập nhật KPI hàng ngày"
+                },
+                {
+                    id: 4,
+                    group_id: 2,
+                    ten_nhom: "Nhóm B",
+                    ten_nv: "Phạm Thị D",
+                    afyp: 9000000,
+                    phan_tram: 45,
+                    thong_bao1: "Chúc mừng nhóm A đã hoàn thành KPI"
+                }
+            ];
+            
+            renderKPI();
+            setupNotificationScroller();
+        }
+
+        // Render KPI
+        function renderKPI() {
+            const kpiStack = document.getElementById('kpi-stack');
+            if (!kpiStack) return;
+            
+            // Nhóm dữ liệu theo nhóm
+            const groups = {};
+            data.forEach(item => {
+                if (!groups[item.group_id]) {
+                    groups[item.group_id] = {
+                        id: item.group_id,
+                        name: item.ten_nhom,
+                        totalAFYP: 0,
+                        members: []
+                    };
+                }
+                groups[item.group_id].totalAFYP += parseFloat(item.afyp) || 0;
+                groups[item.group_id].members.push(item);
+            });
+            
+            // Tạo thẻ cho mỗi nhóm
+            kpiStack.innerHTML = Object.values(groups).map(group => `
+                <div class="kpi-card group-card" data-group-id="${group.id}" onclick="showGroupDetail(${group.id})">
+                    <div style="padding: 16px; background: rgba(23, 31, 43, 0.9); border-radius: 14px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-users" style="color: #6cc78a;"></i>
+                                <span style="font-weight: 800; color: #f2d38d;">${group.name}</span>
+                            </div>
+                            <span style="font-weight: 900; color: #ffc505;">${formatNumber(group.totalAFYP)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+                            <span style="color: #9a9184;">${group.members.length} thành viên</span>
+                            <i class="fas fa-chevron-right" style="color: #d4a843;"></i>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Cập nhật tổng công ty
+            const totalAFYP = Object.values(groups).reduce((sum, group) => sum + group.totalAFYP, 0);
+            document.querySelector('.cty .afyp-big').textContent = formatNumber(totalAFYP);
+        }
+
+        // Khởi tạo ngày hiện tại
+        function initDate() {
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('vi-VN');
+            document.getElementById('current-date').textContent = formattedDate;
+        }
+
+        // Khởi tạo ứng dụng
+        function initApp() {
+            initDate();
+            loadSampleData();
+            
+            // Thêm event listener cho nút đồng bộ
+            document.getElementById('sync-btn').addEventListener('click', function() {
+                this.classList.add('loading');
+                setTimeout(() => {
+                    loadSampleData();
+                    this.classList.remove('loading');
+                }, 500);
+            });
+        }
+
+        // Khởi chạy khi trang tải xong
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="KPI BVNT">
