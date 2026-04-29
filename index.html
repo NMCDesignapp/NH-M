@@ -3419,11 +3419,11 @@
             if (!wrap || !track) return;
 
             // Lấy tất cả dòng có dữ liệu ở cột thong_bao1, mỗi dòng = 1 thông báo riêng biệt
+            // Không filter theo ky — thông báo hiển thị cho mọi kỳ
             var items = [];
             DATA.forEach(function(x) {
                 var msg = (x.thong_bao1 || '').trim();
                 if (!msg) return;
-                if (ky && x.ky && x.ky !== ky) return;
                 items.push(msg);
             });
 
