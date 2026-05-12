@@ -4503,6 +4503,8 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
 
                 var isPolicyPage = (pagePrefix === 'po');
                 var isCSTuyenNgang = programName && /tuyen\s*ngang/i.test(hk(programName));
+                /* ★ Thi đua TCS - PTB: không phân hạng, gộp tất cả cột điều kiện thành 1 nhóm */
+                var isTDTCSP = programName && /thi\s*đua.*tcs.*ptb|tcs.*ptb/i.test(hk(programName));
 
                 /* ★ TRANG CHÍNH SÁCH KHÔNG PHÂN HẠNG → gộp tất cả cột điều kiện thành 1 nhóm */
                 /* ★ NGOẠI LỆ: CS Tuyển Ngang 2026 → KHÔNG gộp, sẽ xử lý riêng phía dưới */
@@ -4526,12 +4528,25 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                     }
                 }
 
+                /* ★ THI ĐUA TCS - PTB: KHÔNG PHÂN HẠNG → gộp tất cả cột điều kiện thành 1 nhóm */
+                if (isTDTCSP && condGroups.length >= 1) {
+                    var tcsFirstIdx = condGroups[0].start;
+                    var tcsLastIdx = condGroups[condGroups.length - 1].end;
+                    condGroups = [{
+                        start: tcsFirstIdx,
+                        end: tcsLastIdx,
+                        topLabel: '',
+                        groupIdx: 0
+                    }];
+                    groupIdxCounter = 1;
+                }
+
                 /* ★ ÉP PHÂN NHÓM CỘT ĐIỀU KIỆN THEO QUY TẮC CỐ ĐỊNH */
                 /* 5 cột → 1 Vàng + 2 Bạch Kim + 2 Kim Cương */
                 /* 4 cột → 2 Vàng + 2 Bạch Kim */
                 /* 3 cột → 1 Vàng + 1 Bạch Kim + 1 Kim Cương */
-                /* CHỈ áp dụng khi KHÔNG phải trang Chính Sách và KHÔNG phải chương trình thưởng quý */
-                if (condGroups.length > 0 && !isPolicyPage) {
+                /* CHỈ áp dụng khi KHÔNG phải trang Chính Sách, KHÔNG phải Thi đua TCS-PTB và KHÔNG phải chương trình thưởng quý */
+                if (condGroups.length > 0 && !isPolicyPage && !isTDTCSP) {
                     var firstCondGrp = condGroups[0];
                     var lastCondGrp = condGroups[condGroups.length - 1];
                     var condStart = firstCondGrp.start;
@@ -4721,13 +4736,29 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                             if (allFP2) isCTThuong = true;
                         }
                         if (totalCondCols2 >= 6 && !isCTThuong && !isPolicyPage) {
-                            var halfPoint = Math.ceil(totalCondCols2 / 2);
-                            chiTieuRange = { start: ctFirstStart, end: ctFirstStart + halfPoint - 1 };
-                            thucHienRange = { start: ctFirstStart + halfPoint, end: ctLastEnd };
-                            hasChiThucGrouping = true;
-                            thucHienAllCond = true;
+                            /* ★ Thi đua TCS-PTB: tất cả cột condition → TIẾN ĐỘ THỰC HIỆN, không chia đôi */
+                            if (isTDTCSP) {
+                                chiTieuRange = { start: ctFirstStart, end: ctLastEnd };
+                                hasChiThucGrouping = true;
+                                thucHienAllCond = true;
+                            } else {
+                                var halfPoint = Math.ceil(totalCondCols2 / 2);
+                                chiTieuRange = { start: ctFirstStart, end: ctFirstStart + halfPoint - 1 };
+                                thucHienRange = { start: ctFirstStart + halfPoint, end: ctLastEnd };
+                                hasChiThucGrouping = true;
+                                thucHienAllCond = true;
+                            }
                         }
                     }
+                }
+
+                /* ★ Thi đua TCS-PTB: đảm bảo luôn có chiTieuRange cho tất cả cột condition */
+                if (isTDTCSP && condGroups.length > 0 && !chiTieuRange) {
+                    var tcsCondStart = condGroups[0].start;
+                    var tcsCondEnd = condGroups[condGroups.length - 1].end;
+                    chiTieuRange = { start: tcsCondStart, end: tcsCondEnd };
+                    hasChiThucGrouping = true;
+                    thucHienAllCond = true;
                 }
 
                 /* ★ Phát hiện cột có nội dung ngày tháng → xuống dòng, thu gọn */
@@ -4873,6 +4904,11 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                 var totalHeaderRows = 1;
                 if (hasCond) totalHeaderRows = 2;
                 if (hasChiThucGrouping) totalHeaderRows = 3;
+                /* ★ Thi đua TCS-PTB: không có dòng phân hạng → chỉ 2 hàng header (hRow0 + hRow1) */
+                if (isTDTCSP && hasChiThucGrouping) totalHeaderRows = 2;
+
+                /* ★ Số hàng còn lại sau hRow0 — dùng cho rowspan trong hRow1 */
+                var rowsAfterH0 = totalHeaderRows - 1;
 
                 var hRow0 = ''; /* Hàng 0 (top): CHỈ TIÊU / THỰC HIỆN grouping — chỉ khi hasChiThucGrouping */
                 var hRow1 = ''; /* Hàng 1: info + numdata + percent + cond-top(gộp) + money */
@@ -4886,6 +4922,10 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                 for (var hi = 0; hi < dc; hi++) {
                     var cat = colCats[hi];
                     var hdrText = formatHeaderText(hd[hi] || ('Cột ' + (hi + 1)));
+                    /* ★ Thi đua TCS-PTB: đổi header ">=6" thành "SLHĐ >= 6" */
+                    if (isTDTCSP && String(hd[hi] || '').trim() === '>=6') {
+                        hdrText = formatHeaderText('SLHĐ >= 6');
+                    }
                     var hCls = '';
 
                     /* ★ Kiểm tra cột có thuộc CHỈ TIÊU, THỰC HIỆN, hoặc THỰC HIỆN LŨY KẾ không */
@@ -4898,14 +4938,14 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                         hCls = 'h-info';
                         if (hi === sttColIdx) hCls += ' pst-h';
                         if (hasChiThucGrouping) {
-                            hRow0 += '<th class="' + hCls + '" rowspan="3">' + hdrText + '</th>';
+                            hRow0 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         } else {
                             hRow1 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         }
                     } else if (cat === 'textInfo') {
                         hCls = 'h-text-info';
                         if (hasChiThucGrouping) {
-                            hRow0 += '<th class="' + hCls + '" rowspan="3">' + hdrText + '</th>';
+                            hRow0 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         } else {
                             hRow1 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         }
@@ -4918,7 +4958,7 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                                 hRow0 += '<th class="h-thuc-hien-lk" colspan="' + lkSpan + '">THỰC HIỆN LŨY KẾ</th>';
                                 thucHienLKProcessed = true;
                             }
-                            hRow1 += '<th class="' + hCls + '" rowspan="2">' + hdrText + '</th>';
+                            hRow1 += '<th class="' + hCls + '" rowspan="' + rowsAfterH0 + '">' + hdrText + '</th>';
                         } else if (inThucHien) {
                             /* ★ THỰC HIỆN group: thêm hRow0 header (1 lần) + hRow1 header */
                             if (!thucHienProcessed) {
@@ -4926,9 +4966,9 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                                 hRow0 += '<th class="h-thuc-hien" colspan="' + thSpan + '">THỰC HIỆN</th>';
                                 thucHienProcessed = true;
                             }
-                            hRow1 += '<th class="' + hCls + '" rowspan="2">' + hdrText + '</th>';
+                            hRow1 += '<th class="' + hCls + '" rowspan="' + rowsAfterH0 + '">' + hdrText + '</th>';
                         } else if (hasChiThucGrouping) {
-                            hRow0 += '<th class="' + hCls + '" rowspan="3">' + hdrText + '</th>';
+                            hRow0 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         } else {
                             hRow1 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         }
@@ -4940,16 +4980,16 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                                 hRow0 += '<th class="h-thuc-hien-lk" colspan="' + lkSpan2 + '">THỰC HIỆN LŨY KẾ</th>';
                                 thucHienLKProcessed = true;
                             }
-                            hRow1 += '<th class="' + hCls + '" rowspan="2">' + hdrText + '</th>';
+                            hRow1 += '<th class="' + hCls + '" rowspan="' + rowsAfterH0 + '">' + hdrText + '</th>';
                         } else if (inThucHien) {
                             if (!thucHienProcessed) {
                                 var thSpan2 = thucHienRange.end - thucHienRange.start + 1;
                                 hRow0 += '<th class="h-thuc-hien" colspan="' + thSpan2 + '">THỰC HIỆN</th>';
                                 thucHienProcessed = true;
                             }
-                            hRow1 += '<th class="' + hCls + '" rowspan="2">' + hdrText + '</th>';
+                            hRow1 += '<th class="' + hCls + '" rowspan="' + rowsAfterH0 + '">' + hdrText + '</th>';
                         } else if (hasChiThucGrouping) {
-                            hRow0 += '<th class="' + hCls + '" rowspan="3">' + hdrText + '</th>';
+                            hRow0 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         } else {
                             hRow1 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         }
@@ -4961,16 +5001,16 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                                 hRow0 += '<th class="h-thuc-hien-lk" colspan="' + lkSpanFyc + '">THỰC HIỆN LŨY KẾ</th>';
                                 thucHienLKProcessed = true;
                             }
-                            hRow1 += '<th class="' + hCls + '" rowspan="2">' + hdrText + '</th>';
+                            hRow1 += '<th class="' + hCls + '" rowspan="' + rowsAfterH0 + '">' + hdrText + '</th>';
                         } else if (inThucHien) {
                             if (!thucHienProcessed) {
                                 var thSpanFyc = thucHienRange.end - thucHienRange.start + 1;
                                 hRow0 += '<th class="h-thuc-hien" colspan="' + thSpanFyc + '">THỰC HIỆN</th>';
                                 thucHienProcessed = true;
                             }
-                            hRow1 += '<th class="' + hCls + '" rowspan="2">' + hdrText + '</th>';
+                            hRow1 += '<th class="' + hCls + '" rowspan="' + rowsAfterH0 + '">' + hdrText + '</th>';
                         } else if (hasChiThucGrouping) {
-                            hRow0 += '<th class="' + hCls + '" rowspan="3">' + hdrText + '</th>';
+                            hRow0 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         } else {
                             hRow1 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         }
@@ -4982,16 +5022,16 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                                 hRow0 += '<th class="h-thuc-hien-lk" colspan="' + lkSpan3 + '">THỰC HIỆN LŨY KẾ</th>';
                                 thucHienLKProcessed = true;
                             }
-                            hRow1 += '<th class="' + hCls + '" rowspan="2">' + hdrText + '</th>';
+                            hRow1 += '<th class="' + hCls + '" rowspan="' + rowsAfterH0 + '">' + hdrText + '</th>';
                         } else if (inThucHien) {
                             if (!thucHienProcessed) {
                                 var thSpan3 = thucHienRange.end - thucHienRange.start + 1;
                                 hRow0 += '<th class="h-thuc-hien" colspan="' + thSpan3 + '">THỰC HIỆN</th>';
                                 thucHienProcessed = true;
                             }
-                            hRow1 += '<th class="' + hCls + '" rowspan="2">' + hdrText + '</th>';
+                            hRow1 += '<th class="' + hCls + '" rowspan="' + rowsAfterH0 + '">' + hdrText + '</th>';
                         } else if (hasChiThucGrouping) {
-                            hRow0 += '<th class="' + hCls + '" rowspan="3">' + hdrText + '</th>';
+                            hRow0 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         } else {
                             hRow1 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         }
@@ -5003,23 +5043,23 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                                 hRow0 += '<th class="h-thuc-hien-lk" colspan="' + lkSpan4 + '">THỰC HIỆN LŨY KẾ</th>';
                                 thucHienLKProcessed = true;
                             }
-                            hRow1 += '<th class="' + hCls + '" rowspan="2">' + hdrText + '</th>';
+                            hRow1 += '<th class="' + hCls + '" rowspan="' + rowsAfterH0 + '">' + hdrText + '</th>';
                         } else if (inThucHien) {
                             if (!thucHienProcessed) {
                                 var thSpan4 = thucHienRange.end - thucHienRange.start + 1;
                                 hRow0 += '<th class="h-thuc-hien" colspan="' + thSpan4 + '">THỰC HIỆN</th>';
                                 thucHienProcessed = true;
                             }
-                            hRow1 += '<th class="' + hCls + '" rowspan="2">' + hdrText + '</th>';
+                            hRow1 += '<th class="' + hCls + '" rowspan="' + rowsAfterH0 + '">' + hdrText + '</th>';
                         } else if (hasChiThucGrouping) {
-                            hRow0 += '<th class="' + hCls + '" rowspan="3">' + hdrText + '</th>';
+                            hRow0 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         } else {
                             hRow1 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         }
                     } else if (cat === 'money') {
                         hCls = 'h-money';
                         if (hasChiThucGrouping) {
-                            hRow0 += '<th class="' + hCls + '" rowspan="3">' + hdrText + '</th>';
+                            hRow0 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         } else {
                             hRow1 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         }
@@ -5030,53 +5070,60 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                             hRow0 += '<th class="h-thuc-hien" colspan="' + thSpanCond + '">THỰC HIỆN</th>';
                             thucHienProcessed = true;
                         }
-                        /* ★ CHỈ TIÊU group: condition columns */
+                        /* ★ CHỈ TIÊU / TIẾN ĐỘ THỰC HIỆN group: condition columns */
                         if (inChiTieu && !chiTieuProcessed) {
-                            /* hRow0: CHỈ TIÊU header */
+                            /* hRow0: header — đổi "CHỈ TIÊU" thành "TIẾN ĐỘ THỰC HIỆN" cho TCS-PTB */
                             var ctSpan = chiTieuRange.end - chiTieuRange.start + 1;
-                            hRow0 += '<th class="h-chi-tieu" colspan="' + ctSpan + '">CHỈ TIÊU</th>';
+                            var ctLabel = isTDTCSP ? 'TIẾN ĐỘ THỰC HIỆN' : 'CHỈ TIÊU';
+                            hRow0 += '<th class="h-chi-tieu" colspan="' + ctSpan + '">' + ctLabel + '</th>';
                             chiTieuProcessed = true;
                         }
-                        /* Tìm group chứa cột này */
-                        var grp = null;
-                        for (var gci = 0; gci < condGroups.length; gci++) {
-                            if (hi >= condGroups[gci].start && hi <= condGroups[gci].end) { grp = condGroups[gci]; break; }
-                        }
-                        if (grp && !condProcessed[grp.start]) {
-                            /* Hàng trên: gộp colspan, chỉ hiện tên danh hiệu/mức */
-                            var span = grp.end - grp.start + 1;
-                            var gCls = 'h-cond-top h-cond-g' + (grp.groupIdx % 5);
-                            /* ★ Phát hiện nhóm điều kiện chứa vé hoặc % → thêm class xanh lá */
-                            var gHasVe = false, gHasPct = false;
-                            for (var gvei = grp.start; gvei <= grp.end; gvei++) {
-                                var gveHdr = String(hd[gvei] || '').trim();
-                                if (/\d+\s*vé/i.test(gveHdr)) gHasVe = true;
-                                if (gveHdr.indexOf('%') >= 0) gHasPct = true;
+                        /* ★ Thi đua TCS-PTB: không phân hạng → hiện header trực tiếp, không gộp nhóm */
+                        if (isTDTCSP) {
+                            /* Mỗi cột condition hiện header đầy đủ trực tiếp */
+                            hRow1 += '<th class="h-cond-top h-cond-g0" rowspan="' + rowsAfterH0 + '">' + hdrText + '</th>';
+                        } else {
+                            /* Tìm group chứa cột này */
+                            var grp = null;
+                            for (var gci = 0; gci < condGroups.length; gci++) {
+                                if (hi >= condGroups[gci].start && hi <= condGroups[gci].end) { grp = condGroups[gci]; break; }
                             }
-                            if (gHasVe) gCls += ' h-cond-ve';
-                            if (gHasPct) gCls += ' h-cond-pct';
-                            hRow1 += '<th class="' + gCls + '" colspan="' + span + '">' + escH(grp.topLabel) + '</th>';
-                            condProcessed[grp.start] = true;
+                            if (grp && !condProcessed[grp.start]) {
+                                /* Hàng trên: gộp colspan, chỉ hiện tên danh hiệu/mức */
+                                var span = grp.end - grp.start + 1;
+                                var gCls = 'h-cond-top h-cond-g' + (grp.groupIdx % 5);
+                                /* ★ Phát hiện nhóm điều kiện chứa vé hoặc % → thêm class xanh lá */
+                                var gHasVe = false, gHasPct = false;
+                                for (var gvei = grp.start; gvei <= grp.end; gvei++) {
+                                    var gveHdr = String(hd[gvei] || '').trim();
+                                    if (/\d+\s*vé/i.test(gveHdr)) gHasVe = true;
+                                    if (gveHdr.indexOf('%') >= 0) gHasPct = true;
+                                }
+                                if (gHasVe) gCls += ' h-cond-ve';
+                                if (gHasPct) gCls += ' h-cond-pct';
+                                hRow1 += '<th class="' + gCls + '" colspan="' + span + '">' + escH(grp.topLabel) + '</th>';
+                                condProcessed[grp.start] = true;
+                            }
+                            /* Hàng dưới: chi tiết điều kiện — trích phần SAU topLabel */
+                            var rawH = String(hd[hi] || '').trim();
+                            /* Tìm group chứa cột này để lấy topLabel */
+                            var condGrpForBot = null;
+                            for (var bgci2 = 0; bgci2 < condGroups.length; bgci2++) {
+                                if (hi >= condGroups[bgci2].start && hi <= condGroups[bgci2].end) { condGrpForBot = condGroups[bgci2]; break; }
+                            }
+                            var botText = (condGrpForBot && rawH.indexOf(condGrpForBot.topLabel) === 0)
+                                ? extractBotText(rawH, condGrpForBot.topLabel)
+                                : extractBotText(rawH, extractTopLabel(rawH));
+                            /* ★ Định dạng botText: "01 vé", "02 vé", "%" → xuống hàng, đỏ, in đậm, nền nổi bật */
+                            var formattedBot = formatCondBotText(botText, rawH);
+                            /* Group class cho màu */
+                            var botCls = 'h-cond-bot';
+                            if (condGrpForBot) botCls += ' h-cond-g' + (condGrpForBot.groupIdx % 5);
+                            /* ★ Phát hiện cột điều kiện chứa vé hoặc % → thêm class xanh lá */
+                            if (/\d+\s*vé/i.test(rawH)) botCls += ' h-cond-ve';
+                            if (rawH.indexOf('%') >= 0) botCls += ' h-cond-pct';
+                            hRow2 += '<th class="' + botCls + '">' + formattedBot + '</th>';
                         }
-                        /* Hàng dưới: chi tiết điều kiện — trích phần SAU topLabel */
-                        var rawH = String(hd[hi] || '').trim();
-                        /* Tìm group chứa cột này để lấy topLabel */
-                        var condGrpForBot = null;
-                        for (var bgci2 = 0; bgci2 < condGroups.length; bgci2++) {
-                            if (hi >= condGroups[bgci2].start && hi <= condGroups[bgci2].end) { condGrpForBot = condGroups[bgci2]; break; }
-                        }
-                        var botText = (condGrpForBot && rawH.indexOf(condGrpForBot.topLabel) === 0)
-                            ? extractBotText(rawH, condGrpForBot.topLabel)
-                            : extractBotText(rawH, extractTopLabel(rawH));
-                        /* ★ Định dạng botText: "01 vé", "02 vé", "%" → xuống hàng, đỏ, in đậm, nền nổi bật */
-                        var formattedBot = formatCondBotText(botText, rawH);
-                        /* Group class cho màu */
-                        var botCls = 'h-cond-bot';
-                        if (condGrpForBot) botCls += ' h-cond-g' + (condGrpForBot.groupIdx % 5);
-                        /* ★ Phát hiện cột điều kiện chứa vé hoặc % → thêm class xanh lá */
-                        if (/\d+\s*vé/i.test(rawH)) botCls += ' h-cond-ve';
-                        if (rawH.indexOf('%') >= 0) botCls += ' h-cond-pct';
-                        hRow2 += '<th class="' + botCls + '">' + formattedBot + '</th>';
                     }
                 }
 
@@ -5084,7 +5131,10 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                 if (hasChiThucGrouping) {
                     theadHtml += '<tr class="chi-thuc-row">' + hRow0 + '</tr>';
                     theadHtml += '<tr>' + hRow1 + '</tr>';
-                    theadHtml += '<tr class="cond-row">' + hRow2 + '</tr>';
+                    /* ★ Thi đua TCS-PTB: không có dòng phân hạng → bỏ hRow2 */
+                    if (!isTDTCSP) {
+                        theadHtml += '<tr class="cond-row">' + hRow2 + '</tr>';
+                    }
                 } else {
                     theadHtml += '<tr>' + hRow1 + '</tr>';
                     if (hasCond) {
@@ -5307,6 +5357,9 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
 
                     if (cgi === sttColIdx) {
                         colgroupHtml += '<col style="width:28px;min-width:22px">';
+                    } else if (isTDTCSP && cgi === dc - 1 && /nguoi\s*tuyen\s*dung|người\s*tuyển\s*dụng|ntd/i.test(String(hd[cgi] || ''))) {
+                        /* ★ Thi đua TCS-PTB: cột NGƯỜI TUYỂN DỤNG (cột cuối) → thu gọn */
+                        colgroupHtml += '<col style="width:60px;min-width:40px">';
                     } else if (cgCat === 'info' || cgi < infoColCount) {
                         /* Cột info: quy tắc — cột lẻ (Nhóm, Họ tên...) rộng hơn, cột chẵn hẹp */
                         if (cgi % 2 === 1) {
