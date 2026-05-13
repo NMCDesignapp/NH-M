@@ -4692,6 +4692,8 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                     var thEnd = thStart - 1;
                     for (var thi2 = thStart; thi2 < dc; thi2++) {
                         var thCat = colCats[thi2];
+                        /* ★ Thi đua TCS-PTB: cột "Người TD" cuối cùng không gom vào thucHienRange */
+                        if (isTDTCSP && thi2 === dc - 1 && /người\s*td|nguoi\s*td/i.test(String(hd[thi2] || ''))) break;
                         if (thCat === 'numdata' || thCat === 'numdataFyp' || thCat === 'numdataFyc' || thCat === 'numdataIp' || thCat === 'percent') {
                             thEnd = thi2;
                         } else {
@@ -5357,9 +5359,9 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
 
                     if (cgi === sttColIdx) {
                         colgroupHtml += '<col style="width:28px;min-width:22px">';
-                    } else if (isTDTCSP && cgi === dc - 1 && /nguoi\s*tuyen\s*dung|người\s*tuyển\s*dụng|ntd/i.test(String(hd[cgi] || ''))) {
-                        /* ★ Thi đua TCS-PTB: cột NGƯỜI TUYỂN DỤNG (cột cuối) → thu gọn */
-                        colgroupHtml += '<col style="width:60px;min-width:40px">';
+                    } else if (isTDTCSP && cgi === dc - 1 && /nguoi\s*tuyen\s*dung|người\s*tuyển\s*dụng|người\s*td|nguoi\s*td/i.test(String(hd[cgi] || ''))) {
+                        /* ★ Thi đua TCS-PTB: cột NGƯỜI TD (cột cuối) → thu gọn, không phân tầng */
+                        colgroupHtml += '<col style="width:45px;min-width:30px">';
                     } else if (cgCat === 'info' || cgi < infoColCount) {
                         /* Cột info: quy tắc — cột lẻ (Nhóm, Họ tên...) rộng hơn, cột chẵn hẹp */
                         if (cgi % 2 === 1) {
