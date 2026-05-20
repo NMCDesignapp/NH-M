@@ -2187,6 +2187,133 @@
             .td-page .pcard-d { font-size: .72rem; padding: 7px 12px; }
         }
 
+        /* ========== DESKTOP LAYOUT — MAIN PAGE ========== */
+        @media (min-width: 900px) {
+            .app-wrap { max-width: 1320px; }
+            #view-main.active { display: grid !important; }
+            #view-main {
+                grid-template-columns: 1fr 380px;
+                grid-template-rows: auto auto 1fr;
+                gap: 20px;
+                align-items: start;
+            }
+            /* Header spans full width */
+            #view-main > header { grid-column: 1 / -1; }
+            /* Skeleton & error state span full width */
+            #skeleton-main, #error-main { grid-column: 1 / -1; }
+
+            /* LEFT COLUMN: Company card + Nav buttons */
+            #kpi-company { grid-column: 1; grid-row: 2; margin-top: 0; }
+            #nav-grid { grid-column: 1; grid-row: 3; margin-top: 0; }
+
+            /* RIGHT COLUMN: Top3 + Notice board */
+            #main-top3-container { grid-column: 2; grid-row: 2; }
+            #notice-board { grid-column: 2; grid-row: 3; margin-top: 0; }
+
+            /* ★ Redesign Company Card for desktop — ngang, dễ nhìn hơn */
+            .kpi-cty {
+                border-radius: 20px !important;
+                padding: 22px 28px 24px !important;
+            }
+            .cty-head { margin-bottom: 18px !important; }
+            .cty-name { font-size: 16px !important; }
+            .cty-pct-num { font-size: 3rem !important; }
+            .cty-body { grid-template-columns: minmax(0, 1fr) minmax(240px, 380px) !important; gap: 24px !important; }
+            .cty .afyp-big { font-size: 3.2rem !important; }
+            .cty .kh-small { font-size: 1.1rem !important; }
+            .cty-progress { height: 26px !important; }
+            .cty-stats { grid-template-columns: repeat(4, 1fr) !important; gap: 14px !important; margin-top: 20px !important; }
+            .cty-stat { border-radius: 18px !important; padding: 14px 10px 12px !important; }
+            .cty-stat-label { font-size: 12px !important; margin-bottom: 10px !important; }
+            .cty-stat-val { font-size: 30px !important; }
+
+            /* ★ Nav grid — 1 cột dọc trên desktop */
+            #nav-grid.nav-grid {
+                display: flex !important;
+                flex-direction: column;
+                gap: 10px;
+            }
+            #nav-grid .nav-row-3 {
+                display: contents;
+            }
+            #nav-grid .nav-btn {
+                width: 100%;
+                padding: 16px 18px;
+                font-size: 13px;
+                border-radius: 14px;
+                justify-content: flex-start;
+                gap: 12px;
+            }
+            #nav-grid .nav-icon { font-size: 16px; }
+
+            /* ★ Notice board desktop — nhỏ gọn hơn */
+            .notice-board { height: auto !important; max-height: 400px; border-radius: 18px !important; }
+            .notice-board-item { font-size: 15px !important; padding: 13px 20px !important; min-height: 48px !important; }
+
+            /* ★ Top 3 section on main page */
+            .main-top3-section {
+                border-radius: 18px;
+                border: 1px solid #d4a84359;
+                background: linear-gradient(180deg, #0f1825f5, #172438f0);
+                box-shadow: 0 8px 24px #0000003d, inset 0 1px 0 #ffffff10;
+                padding: 18px 16px 14px;
+                overflow: hidden;
+            }
+            .main-top3-title {
+                font-size: 12px;
+                font-weight: 900;
+                text-transform: uppercase;
+                letter-spacing: .1em;
+                color: #d9b65a;
+                margin-bottom: 14px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .main-top3-title i { color: #ffc46b; }
+            .main-top3-list { display: flex; flex-direction: column; gap: 10px; }
+            .main-top3-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 14px;
+                border-radius: 12px;
+                border: 1px solid #ffffff0d;
+                background: #ffffff06;
+                transition: background .2s;
+            }
+            .main-top3-item:hover { background: #ffffff0c; }
+            .main-top3-rank {
+                width: 28px; height: 28px;
+                border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 12px; font-weight: 900;
+                flex-shrink: 0;
+            }
+            .main-top3-rank.r1 { background: linear-gradient(145deg, #fff3c5, #d6a22d); color: #4a3005; }
+            .main-top3-rank.r2 { background: linear-gradient(145deg, #ffffff, #b8c2cc); color: #23303e; }
+            .main-top3-rank.r3 { background: linear-gradient(145deg, #f4dbc5, #ba7340); color: #3d1f10; }
+            .main-top3-info { flex: 1; min-width: 0; }
+            .main-top3-name { font-size: 13px; font-weight: 900; color: #fff8ec; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .main-top3-val { font-size: 11px; color: #9aa8b8; font-weight: 700; margin-top: 2px; }
+            .main-top3-pct {
+                font-size: 18px; font-weight: 900; line-height: 1;
+                flex-shrink: 0;
+            }
+            .main-top3-pct.c1 { color: #7de8c8; }
+            .main-top3-pct.c2 { color: #8fd0ff; }
+            .main-top3-pct.c3 { color: #d4a843; }
+            .main-top3-empty {
+                text-align: center;
+                color: #7a8fa6;
+                font-size: 12px;
+                padding: 20px;
+            }
+
+            /* Section divider & link grid span full */
+            #link-divider, #link-grid { grid-column: 1 / -1; }
+        }
+
         /* PWA Install Banner */
         .pwa-banner {
             display: none;
@@ -2429,6 +2556,10 @@
             </nav>
 
             <div id="notice-board" class="notice-board" style="display:none"></div>
+
+            <!-- ★ Desktop: Top 3 nhóm (rendered by renderMainTop3) -->
+            <div id="main-top3-container" style="display:none"></div>
+
             <div class="section-divider" id="link-divider" style="display:none">Liên kết</div>
             <div class="link-grid" id="link-grid" style="display:none"></div>
         </section>
@@ -2932,6 +3063,54 @@
                 '</div>' +
                 buildTeamBoard(active, activeIdx);
         }
+        /* ★ Render Top 3 nhóm cho trang chính (desktop sidebar) */
+        function renderMainTop3() {
+            var box = $('main-top3-container');
+            if (!box) return;
+
+            /* Lấy dữ liệu nhóm từ DATA — giống logic renderDetail */
+            var t = timeState.detail;
+            var rows = DATA.filter(function(x) { return x.ten_nhan_vien && x.ten_nhan_vien.indexOf('Nhóm') === 0; });
+
+            var items = rows.map(function(r) {
+                var v = getDetailVal(r, t);
+                var name = r.ten_nhan_vien.replace(/^Nhóm\s*/i, '');
+                var pct = v.kh ? (v.afyp / v.kh * 100) : 0;
+                return { name: name, afyp: v.afyp, kh: v.kh, pct: pct };
+            });
+
+            var filtered = items.filter(function(x) { return x.kh > 0; });
+
+            if (!filtered.length) {
+                box.innerHTML = '<div class="main-top3-section"><div class="main-top3-title"><i class="fa-solid fa-ranking-star"></i>Top 3 Nhóm</div><div class="main-top3-empty">Chưa có dữ liệu</div></div>';
+                box.style.display = '';
+                return;
+            }
+
+            filtered.sort(function(a, b) { return b.pct - a.pct; });
+            var top = filtered.slice(0, 3);
+
+            var h = '<div class="main-top3-section">';
+            h += '<div class="main-top3-title"><i class="fa-solid fa-ranking-star"></i>Top 3 Nhóm</div>';
+            h += '<div class="main-top3-list">';
+            top.forEach(function(it, idx) {
+                var rank = idx + 1;
+                var rCls = 'r' + rank;
+                var cCls = 'c' + rank;
+                h += '<div class="main-top3-item">' +
+                    '<div class="main-top3-rank ' + rCls + '">' + rank + '</div>' +
+                    '<div class="main-top3-info">' +
+                    '<div class="main-top3-name">Nhóm ' + esc(it.name) + '</div>' +
+                    '<div class="main-top3-val">TH: ' + fmt(it.afyp) + 'trđ / KH: ' + fmt(it.kh) + 'trđ</div>' +
+                    '</div>' +
+                    '<div class="main-top3-pct ' + cCls + '">' + it.pct.toFixed(1) + '%</div>' +
+                    '</div>';
+            });
+            h += '</div></div>';
+            box.innerHTML = h;
+            box.style.display = '';
+        }
+
         function bindDashboardEvents() {
             if (document.body.dataset.mainDashBound === '1') return;
             document.body.dataset.mainDashBound = '1';
@@ -3246,6 +3425,7 @@
 
             ctyBox.innerHTML = buildCtyCard(total);
             renderNoticeBoard(ky);
+            renderMainTop3();
             bindDashboardEvents();
             triggerAnimations();
         }
