@@ -2326,6 +2326,9 @@
                 grid-template-columns: 1fr;
             }
             #view-detail.detail-mode .detail-shell { grid-column: 1; grid-row: 1; }
+            #view-detail.detail-mode #detail-company-panel,
+            #view-detail.detail-mode #detail-top3-container,
+            #view-detail.detail-mode #detail-notice-board { display: none !important; }
             /* Detail shell spans left column, rows 1-3 */
             #view-detail .detail-shell { grid-column: 1; grid-row: 1 / 4; }
 
@@ -2795,16 +2798,16 @@
                 </div>
                 <div class="month-grid" id="dt-months"></div>
                 <div class="func-row" id="dt-funcs"></div>
-                <!-- ★ Desktop: Company stats panel (rendered by renderDetail) -->
-                <div id="detail-company-panel" style="display:none"></div>
                 <div id="top3-container"></div>
-                <!-- ★ Desktop: Top 3 nhóm section cho trang chi tiết -->
-                <div id="detail-top3-container" style="display:none"></div>
                 <div id="detail-list" class="detail-list-wrap"></div>
-                <!-- ★ Desktop: Notice board cho trang chi tiết -->
-                <div id="detail-notice-board" class="notice-board" style="display:none"></div>
                 <div id="group-detail-content" style="display:none"></div>
             </div>
+            <!-- ★ Desktop: Company stats panel (rendered by renderDetail) — direct child of #view-detail for grid layout -->
+            <div id="detail-company-panel" style="display:none"></div>
+            <!-- ★ Desktop: Top 3 nhóm section cho trang chi tiết — direct child of #view-detail for grid layout -->
+            <div id="detail-top3-container" style="display:none"></div>
+            <!-- ★ Desktop: Notice board cho trang chi tiết — direct child of #view-detail for grid layout -->
+            <div id="detail-notice-board" class="notice-board" style="display:none"></div>
         </section>
 
         <!-- CALENDAR VIEW -->
