@@ -3495,20 +3495,26 @@
 
             var delay = 0;
             var htmlParts = [];
+
             items.forEach(function(it, idx) {
                 var fill = Math.min(it.pct, 100);
                 var pc = it.pct >= 90 ? '#7de8c8' : it.pct >= 70 ? '#8fd0ff' : '#7a9bbf';
                 /* Find matching adKey for click-to-detail */
-                /* Normalize: strip "Nhóm" prefix before comparing — it.name đã bị strip, entry.groups[gi].name có thể chưa */
+                /* Use normKey for robust matching: strip diacritics, lowercase, only a-z0-9 */
                 var groupKey = '';
                 var activeGroupName = '';
-                function stripNhom(v) { return String(v||'').replace(/^Nhóm\s*/i,'').trim(); }
+                function _nk(v) { return String(v||'').replace(/^Nhóm\s*/i,'').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[đĐ]/g,'d').toLowerCase().replace(/[^a-z0-9]/g,''); }
+                var itNameNorm = _nk(it.name);
                 for (var ak in dashboardState.adGroups) {
                     var entry = dashboardState.adGroups[ak];
                     if (entry && entry.groups) {
                         for (var gi = 0; gi < entry.groups.length; gi++) {
-                            if (stripNhom(entry.groups[gi].name) === it.name || entry.groups[gi].name === it.name) { groupKey = ak; activeGroupName = entry.groups[gi].name; break; }
+                            var gNorm = _nk(entry.groups[gi].name);
+                            if (gNorm === itNameNorm || entry.groups[gi].name === it.name || _nk(entry.groups[gi].name) === _nk('Nhóm ' + it.name)) { groupKey = ak; activeGroupName = entry.groups[gi].name; break; }
                         }
+                    } else if (entry && entry.mode === 'members') {
+                        /* Try matching by managerName */
+                        if (_nk(entry.managerName) === itNameNorm || _nk(entry.managerName) === _nk('Nhóm ' + it.name)) { groupKey = ak; activeGroupName = entry.managerName; }
                     }
                     if (groupKey) break;
                 }
@@ -3562,7 +3568,17 @@
 
             var displayName = dashboardState.selectedGroupName || entry.managerName || adKey;
             titleEl.textContent = 'Nhóm ' + displayName;
-            metaEl.textContent = entry.mode === 'members' ? ('Danh sách TVV — ' + (entry.title || entry.managerName)) : ('Nhóm thuộc quyền — ' + (entry.managerName || adKey));
+            if (entry.mode === 'members') {
+                metaEl.textContent = 'Danh sách TVV — ' + (entry.title || entry.managerName);
+            } else if (dashboardState.selectedGroupName) {
+                /* Clicked specific group → chỉ hiển thị tên nhóm */
+                metaEl.textContent = (entry.groups && entry.groups.find(function(g) {
+                    function _sn(v) { return String(v||'').replace(/^Nhóm\s*/i,'').trim(); }
+                    return g.name === dashboardState.selectedGroupName || _sn(g.name) === _sn(dashboardState.selectedGroupName);
+                }) ? entry.groups[0].members.length + ' TVV' : '');
+            } else {
+                metaEl.textContent = 'Nhóm thuộc quyền — ' + (entry.managerName || adKey);
+            }
 
             var html = '';
 
@@ -3584,23 +3600,34 @@
                 /* Groups mode */
                 if (!entry.groups || !entry.groups.length) {
                     html += '<div class="ad-empty">Chưa có nhóm quản lý.</div>';
-                } else {
-                    /* Determine initial active group from selectedGroupName */
-                    var activeIdx = 0;
-                    if (dashboardState.selectedGroupName) {
-                        function _stripN(v) { return String(v||'').replace(/^Nhóm\s*/i,'').trim(); }
-                        var found = entry.groups.findIndex(function(g) { return g.name === dashboardState.selectedGroupName || _stripN(g.name) === _stripN(dashboardState.selectedGroupName); });
-                        if (found >= 0) activeIdx = found;
+                } else if (dashboardState.selectedGroupName) {
+                    /* ★ Clicked from group list → chỉ hiển thị nhóm được chọn, không hiển thị tab các nhóm khác */
+                    function _stripN2(v) { return String(v||'').replace(/^Nhóm\s*/i,'').trim(); }
+                    var targetGroup = null;
+                    for (var i = 0; i < entry.groups.length; i++) {
+                        if (entry.groups[i].name === dashboardState.selectedGroupName || _stripN2(entry.groups[i].name) === _stripN2(dashboardState.selectedGroupName)) {
+                            targetGroup = entry.groups[i]; break;
+                        }
                     }
-                    var active = entry.groups[activeIdx];
+                    if (targetGroup) {
+                        html += '<div class="ad-drill-head" style="margin-bottom:10px"><span>' + esc(targetGroup.name) + '</span><span>' + targetGroup.members.length + ' TVV</span></div>';
+                        html += '<div id="detail-team-board">';
+                        html += buildTeamBoard(targetGroup, 0);
+                        html += '</div>';
+                    } else {
+                        html += '<div class="ad-empty">Không tìm thấy nhóm "' + esc(dashboardState.selectedGroupName) + '"</div>';
+                    }
+                } else {
+                    /* Fallback: không có selectedGroupName → hiển thị tất cả nhóm với tabs */
+                    var active = entry.groups[0];
                     html += '<div class="ad-drill-head" style="margin-bottom:10px"><span>Nhóm thuộc quyền</span><span>' + entry.groups.length + ' nhóm</span></div>';
                     html += '<div class="ad-group-list" id="detail-group-list">';
                     entry.groups.forEach(function(group, idx) {
-                        html += '<button type="button" class="ad-group-btn ' + (idx === activeIdx ? 'on' : '') + '" data-group-name="' + esc(group.name) + '" data-detail-idx="' + idx + '">' + esc(group.name) + '<span class="cnt">(' + group.members.length + ')</span></button>';
+                        html += '<button type="button" class="ad-group-btn ' + (idx === 0 ? 'on' : '') + '" data-group-name="' + esc(group.name) + '" data-detail-idx="' + idx + '">' + esc(group.name) + '<span class="cnt">(' + group.members.length + ')</span></button>';
                     });
                     html += '</div>';
                     html += '<div id="detail-team-board">';
-                    html += buildTeamBoard(active, activeIdx);
+                    html += buildTeamBoard(active, 0);
                     html += '</div>';
 
                     /* Bind group tab clicks after render */
