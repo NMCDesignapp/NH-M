@@ -3499,13 +3499,15 @@
                 var fill = Math.min(it.pct, 100);
                 var pc = it.pct >= 90 ? '#7de8c8' : it.pct >= 70 ? '#8fd0ff' : '#7a9bbf';
                 /* Find matching adKey for click-to-detail */
+                /* Normalize: strip "Nhóm" prefix before comparing — it.name đã bị strip, entry.groups[gi].name có thể chưa */
                 var groupKey = '';
                 var activeGroupName = '';
+                function stripNhom(v) { return String(v||'').replace(/^Nhóm\s*/i,'').trim(); }
                 for (var ak in dashboardState.adGroups) {
                     var entry = dashboardState.adGroups[ak];
                     if (entry && entry.groups) {
                         for (var gi = 0; gi < entry.groups.length; gi++) {
-                            if (entry.groups[gi].name === it.name) { groupKey = ak; activeGroupName = it.name; break; }
+                            if (stripNhom(entry.groups[gi].name) === it.name || entry.groups[gi].name === it.name) { groupKey = ak; activeGroupName = entry.groups[gi].name; break; }
                         }
                     }
                     if (groupKey) break;
@@ -3586,7 +3588,8 @@
                     /* Determine initial active group from selectedGroupName */
                     var activeIdx = 0;
                     if (dashboardState.selectedGroupName) {
-                        var found = entry.groups.findIndex(function(g) { return g.name === dashboardState.selectedGroupName; });
+                        function _stripN(v) { return String(v||'').replace(/^Nhóm\s*/i,'').trim(); }
+                        var found = entry.groups.findIndex(function(g) { return g.name === dashboardState.selectedGroupName || _stripN(g.name) === _stripN(dashboardState.selectedGroupName); });
                         if (found >= 0) activeIdx = found;
                     }
                     var active = entry.groups[activeIdx];
