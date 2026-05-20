@@ -2312,6 +2312,224 @@
 
             /* Section divider & link grid span full */
             #link-divider, #link-grid { grid-column: 1 / -1; }
+
+            /* ========== DESKTOP LAYOUT — DETAIL VIEW (Chi Tiết Nhóm) ========== */
+            #view-detail.active { display: grid !important; }
+            #view-detail {
+                grid-template-columns: 1fr 380px;
+                grid-template-rows: auto auto 1fr;
+                gap: 20px;
+                align-items: start;
+            }
+            /* When in group detail mode, use single column */
+            #view-detail.detail-mode {
+                grid-template-columns: 1fr;
+            }
+            #view-detail.detail-mode .detail-shell { grid-column: 1; grid-row: 1; }
+            /* Detail shell spans left column, rows 1-3 */
+            #view-detail .detail-shell { grid-column: 1; grid-row: 1 / 4; }
+
+            /* ★ Right column: Company panel + Top 3 + Notice board */
+            #detail-company-panel {
+                grid-column: 2; grid-row: 1;
+            }
+            #detail-top3-container {
+                grid-column: 2; grid-row: 2;
+            }
+            #detail-notice-board {
+                grid-column: 2; grid-row: 3;
+                margin-top: 0;
+            }
+
+            /* ★ Redesigned Company Stats Panel for Detail page */
+            .detail-cty-panel {
+                border-radius: 20px;
+                border: 1.5px solid #d6a34866;
+                border-top: 4px solid #f2b24d;
+                background: linear-gradient(180deg, #1b2f49, #172a43);
+                box-shadow: 0 20px 50px #0000005c, inset 0 1px 0 #ffffff14;
+                padding: 22px 24px 20px;
+                overflow: hidden;
+            }
+            .detail-cty-panel.glow-full {
+                border-color: #f2d38d;
+                background: linear-gradient(180deg, #243a58, #1b2f49);
+                box-shadow: 0 0 0 2px #f2d38d6b, 0 24px 54px #00000066, 0 0 34px #f2d38d38, inset 0 1px 0 #ffffff1f;
+            }
+            .detail-cty-head {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+            .detail-cty-icon {
+                width: 42px; height: 42px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #f2b24d, #e09830);
+                display: flex; align-items: center; justify-content: center;
+                font-size: 18px; color: #1b2f49;
+                box-shadow: 0 4px 12px #f2b24d44;
+                flex-shrink: 0;
+            }
+            .detail-cty-title {
+                font-size: 14px;
+                font-weight: 900;
+                text-transform: uppercase;
+                color: #ff9f2f;
+                letter-spacing: .02em;
+            }
+            .detail-cty-pct-row {
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 10px;
+                margin-bottom: 14px;
+            }
+            .detail-cty-pct {
+                font-size: 2.8rem;
+                font-weight: 900;
+                line-height: 1;
+                color: #e0c48c;
+            }
+            .detail-cty-afyp-row {
+                display: flex;
+                align-items: baseline;
+                gap: 6px;
+            }
+            .detail-cty-afyp {
+                font-size: 1.8rem;
+                font-weight: 900;
+                color: #fff;
+            }
+            .detail-cty-kh {
+                font-size: .9rem;
+                color: #5a83b8;
+                font-weight: 700;
+            }
+            .detail-cty-progress {
+                width: 100%;
+                height: 18px;
+                border-radius: 999px;
+                background: #9cc6f04d;
+                overflow: hidden;
+                box-shadow: inset 0 1px 2px #00000033;
+                margin-bottom: 16px;
+            }
+            .detail-cty-progress-fill {
+                height: 100%;
+                width: 0;
+                border-radius: inherit;
+                transition: width 1s cubic-bezier(.22, 1, .36, 1);
+                background: linear-gradient(90deg, #11b76f, #16cb74);
+                box-shadow: inset -1px 0 0 #ffffff24;
+            }
+            .detail-cty-progress-fill::after {
+                content: '';
+                display: block;
+                width: 100%;
+                height: 100%;
+                background: repeating-linear-gradient(90deg, #ffffff12 0 18%, transparent 18% 22%);
+            }
+            .detail-cty-stats {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .detail-cty-stat {
+                border-radius: 14px;
+                padding: 12px 10px;
+                text-align: center;
+                border: 1px solid #ffffff0d;
+                box-shadow: inset 0 1px 0 #ffffff08;
+            }
+            .detail-cty-stat-label {
+                font-size: 10px;
+                font-weight: 800;
+                text-transform: uppercase;
+                margin-bottom: 6px;
+                letter-spacing: .03em;
+            }
+            .detail-cty-stat-val {
+                font-size: 22px;
+                font-weight: 900;
+                line-height: 1;
+            }
+            .detail-cty-stat.s-hd { background: #233f64; }
+            .detail-cty-stat.s-hd .detail-cty-stat-label { color: #9db3d2; }
+            .detail-cty-stat.s-hd .detail-cty-stat-val { color: #7fc2ff; }
+            .detail-cty-stat.s-td { background: #3a345f; }
+            .detail-cty-stat.s-td .detail-cty-stat-label { color: #c4b8f0; }
+            .detail-cty-stat.s-td .detail-cty-stat-val { color: #d8b7ff; }
+            .detail-cty-stat.s-chuan { background: #0e4453; }
+            .detail-cty-stat.s-chuan .detail-cty-stat-label { color: #8ee0d3; }
+            .detail-cty-stat.s-chuan .detail-cty-stat-val { color: #16e0d3; }
+            .detail-cty-stat.s-ip { background: #4b3825; }
+            .detail-cty-stat.s-ip .detail-cty-stat-label { color: #d4b07a; }
+            .detail-cty-stat.s-ip .detail-cty-stat-val { color: #ffd789; }
+
+            /* ★ Detail page Top 3 section */
+            .detail-top3-section {
+                border-radius: 18px;
+                border: 1px solid #d4a84359;
+                background: linear-gradient(180deg, #0f1825f5, #172438f0);
+                box-shadow: 0 8px 24px #0000003d, inset 0 1px 0 #ffffff10;
+                padding: 18px 16px 14px;
+                overflow: hidden;
+            }
+            .detail-top3-title {
+                font-size: 12px;
+                font-weight: 900;
+                text-transform: uppercase;
+                letter-spacing: .1em;
+                color: #d9b65a;
+                margin-bottom: 14px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .detail-top3-title i { color: #ffc46b; }
+            .detail-top3-list { display: flex; flex-direction: column; gap: 10px; }
+            .detail-top3-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 14px;
+                border-radius: 12px;
+                border: 1px solid #ffffff0d;
+                background: #ffffff06;
+                transition: background .2s;
+            }
+            .detail-top3-item:hover { background: #ffffff0c; }
+            .detail-top3-rank {
+                width: 28px; height: 28px;
+                border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 12px; font-weight: 900;
+                flex-shrink: 0;
+            }
+            .detail-top3-rank.r1 { background: linear-gradient(145deg, #fff3c5, #d6a22d); color: #4a3005; }
+            .detail-top3-rank.r2 { background: linear-gradient(145deg, #ffffff, #b8c2cc); color: #23303e; }
+            .detail-top3-rank.r3 { background: linear-gradient(145deg, #f4dbc5, #ba7340); color: #3d1f10; }
+            .detail-top3-info { flex: 1; min-width: 0; }
+            .detail-top3-name { font-size: 13px; font-weight: 900; color: #fff8ec; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .detail-top3-val { font-size: 11px; color: #9aa8b8; font-weight: 700; margin-top: 2px; }
+            .detail-top3-pct {
+                font-size: 18px; font-weight: 900; line-height: 1;
+                flex-shrink: 0;
+            }
+            .detail-top3-pct.c1 { color: #7de8c8; }
+            .detail-top3-pct.c2 { color: #8fd0ff; }
+            .detail-top3-pct.c3 { color: #d4a843; }
+            .detail-top3-empty {
+                text-align: center;
+                color: #7a8fa6;
+                font-size: 12px;
+                padding: 20px;
+            }
+
+            /* ★ Detail notice board */
+            #detail-notice-board.notice-board { height: auto !important; max-height: 400px; border-radius: 18px !important; }
+            #detail-notice-board .notice-board-item { font-size: 15px !important; padding: 13px 20px !important; min-height: 48px !important; }
         }
 
         /* PWA Install Banner */
@@ -2577,8 +2795,14 @@
                 </div>
                 <div class="month-grid" id="dt-months"></div>
                 <div class="func-row" id="dt-funcs"></div>
+                <!-- ★ Desktop: Company stats panel (rendered by renderDetail) -->
+                <div id="detail-company-panel" style="display:none"></div>
                 <div id="top3-container"></div>
+                <!-- ★ Desktop: Top 3 nhóm section cho trang chi tiết -->
+                <div id="detail-top3-container" style="display:none"></div>
                 <div id="detail-list" class="detail-list-wrap"></div>
+                <!-- ★ Desktop: Notice board cho trang chi tiết -->
+                <div id="detail-notice-board" class="notice-board" style="display:none"></div>
                 <div id="group-detail-content" style="display:none"></div>
             </div>
         </section>
@@ -3647,6 +3871,8 @@
 
         function renderDetail() {
             /* Show overview mode (all groups with progress bars) */
+            var viewEl = $('view-detail');
+            if (viewEl) viewEl.classList.remove('detail-mode');
             $('detail-title-text').textContent = 'Chi Tiết Ban Nhóm';
             $('detail-meta').textContent = detailMetaText(timeState.detail);
             $('dt-months').style.display = '';
@@ -3654,6 +3880,11 @@
             $('top3-container').style.display = '';
             $('detail-list').style.display = '';
             $('group-detail-content').style.display = 'none';
+
+            /* ★ Desktop: render company panel, top 3, notice board */
+            renderDetailCompanyPanel();
+            renderDetailTop3();
+            renderDetailNoticeBoard();
 
             var box = $('detail-list');
             var t = timeState.detail;
@@ -3724,8 +3955,164 @@
             });
         }
 
+        /* ★ Render Company Stats Panel for Detail page (desktop) */
+        function renderDetailCompanyPanel() {
+            var panel = $('detail-company-panel');
+            if (!panel) return;
+            /* Only show on desktop */
+            if (window.innerWidth < 900) { panel.style.display = 'none'; return; }
+
+            /* Calculate company totals from current DATA */
+            var total = { afyp: 0, kh: 0, lhd: 0, td: 0, hdChuan: 0, tyTrong: 0, tyTrongWeighted: 0, tyTrongCount: 0 };
+            var kyRows = DATA.filter(function(x) { return x.ky === dashboardState.ky && x.ten_nhan_vien; });
+            kyRows.forEach(function(r) {
+                total.afyp += num(r.afyp);
+                total.kh += num(r.ke_hoach_afyp);
+                total.lhd += num(r.luot_hoa_dong);
+                total.td += num(r.tuyen_dung);
+                total.hdChuan += num(r.luot_hd_chuan);
+                var tt = num(r.ty_trong);
+                if (num(r.afyp) > 0) { total.tyTrongWeighted += num(r.afyp) * tt; total.tyTrongCount += num(r.afyp); }
+            });
+            total.tyTrong = total.tyTrongCount ? (total.tyTrongWeighted / total.tyTrongCount) : 0;
+
+            var pct = total.kh ? (total.afyp / total.kh * 100) : 0;
+            var cp = Math.min(pct, 100);
+            var glowClass = pct >= 100 ? ' glow-full' : '';
+
+            var h = '<div class="detail-cty-panel' + glowClass + '">' +
+                '<div class="detail-cty-head">' +
+                '<div class="detail-cty-icon"><i class="fa-solid fa-trophy"></i></div>' +
+                '<div class="detail-cty-title">Tổng Công Ty</div>' +
+                '</div>' +
+                '<div class="detail-cty-pct-row">' +
+                '<div class="detail-cty-pct" data-pct="' + pct + '">0%</div>' +
+                '<div class="detail-cty-afyp-row">' +
+                '<span class="detail-cty-afyp" data-count="' + total.afyp + '">0</span>' +
+                '<span class="detail-cty-kh">/ KH: ' + fmt(total.kh) + '</span>' +
+                '</div>' +
+                '</div>' +
+                '<div class="detail-cty-progress"><div class="detail-cty-progress-fill" data-w="' + cp + '%"></div></div>' +
+                '<div class="detail-cty-stats">' +
+                '<div class="detail-cty-stat s-hd"><div class="detail-cty-stat-label">Lượt HĐ</div><div class="detail-cty-stat-val" data-count="' + total.lhd + '">0</div></div>' +
+                '<div class="detail-cty-stat s-td"><div class="detail-cty-stat-label">TD</div><div class="detail-cty-stat-val" data-count="' + total.td + '">0</div></div>' +
+                '<div class="detail-cty-stat s-chuan"><div class="detail-cty-stat-label">Lượt chuẩn</div><div class="detail-cty-stat-val" data-count="' + total.hdChuan + '">0</div></div>' +
+                '<div class="detail-cty-stat s-ip"><div class="detail-cty-stat-label">IP/AFYP</div><div class="detail-cty-stat-val">' + esc(fmtTyTrong(total.tyTrong)) + '</div></div>' +
+                '</div>' +
+                '</div>';
+
+            panel.innerHTML = h;
+            panel.style.display = '';
+
+            requestAnimationFrame(function() {
+                var fillEl = panel.querySelector('.detail-cty-progress-fill[data-w]');
+                if (fillEl) fillEl.style.width = fillEl.dataset.w;
+                var counts = panel.querySelectorAll('[data-count]');
+                for (var i = 0; i < counts.length; i++) animateValue(counts[i], num(counts[i].dataset.count));
+                var pcts = panel.querySelectorAll('[data-pct]');
+                for (var i = 0; i < pcts.length; i++) animatePct(pcts[i], parseFloat(pcts[i].dataset.pct), 900, 1);
+            });
+        }
+
+        /* ★ Render Top 3 nhóm cho trang Chi Tiết Nhóm (desktop sidebar) */
+        function renderDetailTop3() {
+            var box = $('detail-top3-container');
+            if (!box) return;
+            /* Only show on desktop */
+            if (window.innerWidth < 900) { box.style.display = 'none'; return; }
+
+            var t = timeState.detail;
+            var rows = DATA.filter(function(x) { return x.ten_nhan_vien && x.ten_nhan_vien.indexOf('Nhóm') === 0; });
+
+            var items = rows.map(function(r) {
+                var v = getDetailVal(r, t);
+                var name = r.ten_nhan_vien.replace(/^Nhóm\s*/i, '');
+                var pct = v.kh ? (v.afyp / v.kh * 100) : 0;
+                return { name: name, afyp: v.afyp, kh: v.kh, pct: pct };
+            });
+
+            var filtered = items.filter(function(x) { return x.kh > 0; });
+
+            if (!filtered.length) {
+                box.innerHTML = '<div class="detail-top3-section"><div class="detail-top3-title"><i class="fa-solid fa-ranking-star"></i>Top 3 Nhóm Hoàn Thành Cao Nhất</div><div class="detail-top3-empty">Chưa có dữ liệu</div></div>';
+                box.style.display = '';
+                return;
+            }
+
+            filtered.sort(function(a, b) { return b.pct - a.pct; });
+            var top = filtered.slice(0, 3);
+
+            var h = '<div class="detail-top3-section">';
+            h += '<div class="detail-top3-title"><i class="fa-solid fa-ranking-star"></i>Top 3 Nhóm Hoàn Thành Cao Nhất</div>';
+            h += '<div class="detail-top3-list">';
+            top.forEach(function(it, idx) {
+                var rank = idx + 1;
+                var rCls = 'r' + rank;
+                var cCls = 'c' + rank;
+                h += '<div class="detail-top3-item">' +
+                    '<div class="detail-top3-rank ' + rCls + '">' + rank + '</div>' +
+                    '<div class="detail-top3-info">' +
+                    '<div class="detail-top3-name">Nhóm ' + esc(it.name) + '</div>' +
+                    '<div class="detail-top3-val">TH: ' + fmt(it.afyp) + 'trđ / KH: ' + fmt(it.kh) + 'trđ</div>' +
+                    '</div>' +
+                    '<div class="detail-top3-pct ' + cCls + '">' + it.pct.toFixed(1) + '%</div>' +
+                    '</div>';
+            });
+            h += '</div></div>';
+            box.innerHTML = h;
+            box.style.display = '';
+        }
+
+        /* ★ Render Notice Board for Detail page (desktop sidebar) */
+        function renderDetailNoticeBoard() {
+            var board = $('detail-notice-board');
+            if (!board) return;
+            /* Only show on desktop */
+            if (window.innerWidth < 900) { board.style.display = 'none'; return; }
+
+            var seen = {}, items = [];
+            DATA.forEach(function(x) {
+                var msg = (x.thong_bao_1 || '').trim() || (x.thong_bao1 || '').trim() || (x.thong_bao || '').trim();
+                if (!msg) {
+                    for (var k in x) {
+                        if (k.indexOf('thong_bao') === 0 && (x[k] || '').trim()) {
+                            msg = (x[k] || '').trim();
+                            break;
+                        }
+                    }
+                }
+                if (!msg) return;
+                if (!seen[msg]) { seen[msg] = true; items.push(msg); }
+            });
+
+            if (!items.length) {
+                board.style.display = 'none';
+                board.innerHTML = '';
+                return;
+            }
+
+            var itemHtml = items.map(function(msg) {
+                return '<div class="notice-board-item"><i class="fa-solid fa-bullhorn"></i><span>' + esc(msg) + '</span></div>';
+            }).join('');
+
+            board.innerHTML = '<div class="notice-board-inner">' + itemHtml + itemHtml + '</div>';
+            board.style.display = '';
+
+            requestAnimationFrame(function() {
+                var inner = board.querySelector('.notice-board-inner');
+                if (inner) {
+                    var totalHeight = inner.scrollHeight / 2;
+                    var speed = 50;
+                    var duration = Math.max(10, totalHeight / speed);
+                    inner.style.animation = 'noticeScrollUp ' + duration + 's linear infinite';
+                }
+            });
+        }
+
         function renderGroupDetail(adKey) {
             /* Show group detail mode (specific team board) */
+            var viewEl = $('view-detail');
+            if (viewEl) viewEl.classList.add('detail-mode');
             var entry = dashboardState.adGroups[adKey];
             var groupContent = $('group-detail-content');
             var titleEl = $('detail-title-text');
@@ -3736,6 +4123,10 @@
             $('dt-funcs').style.display = 'none';
             $('top3-container').style.display = 'none';
             $('detail-list').style.display = 'none';
+            /* ★ Hide desktop sidebar panels */
+            $('detail-company-panel').style.display = 'none';
+            $('detail-top3-container').style.display = 'none';
+            $('detail-notice-board').style.display = 'none';
             groupContent.style.display = '';
 
             if (!entry) {
