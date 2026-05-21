@@ -1742,18 +1742,24 @@
             background: #000044;
             color: #fff;
         }
-        /* Nhóm thông tin phụ (cột 5+): nền #103667, chữ trắng */
+        /* Nhóm thông tin phụ (cột 5+): nền navy #1B3A5C, chữ #d4e0f0 */
         .td-page .pt thead th.h-text-info {
-            background: #103667;
-            color: #fff;
+            background: #1B3A5C;
+            color: #d4e0f0;
         }
+        /* Nhóm tên người (TVV, NTD, Họ tên...): nền navy #1B3A5C, chữ #d4e0f0 */
+        .td-page .pt thead th.h-name-info {
+            background: #1B3A5C;
+            color: #d4e0f0;
+        }
+        /* Nhóm số liệu thực hiện: nền #1a5c1a, chữ #cfc */
         .td-page .pt thead th.h-num {
-            background: #002200;
-            color: #fff;
-        }
-        /* Nhóm số liệu FYP: nền nhạt hơn, in đậm nổi bật */
-        .td-page .pt thead th.h-num-fyp {
             background: #1a5c1a;
+            color: #cfc;
+        }
+        /* Nhóm số liệu FYP: nền #0d6e3f, chữ #cfc */
+        .td-page .pt thead th.h-num-fyp {
+            background: #0d6e3f;
             color: #cfc;
             font-weight: 900;
         }
@@ -1763,9 +1769,9 @@
             color: #ffffff;
             font-weight: 700;
         }
-        /* Nhóm số liệu IP tháng: nền nhạt hơn h-num */
+        /* Nhóm số liệu IP tháng: nền #1a5c1a, chữ #cfc */
         .td-page .pt thead th.h-num-ip {
-            background: #1a3d1a;
+            background: #1a5c1a;
             color: #cfc;
         }
         /* Nhóm tỷ lệ %: nền orangered, chữ xanh dương đậm */
@@ -1829,40 +1835,40 @@
         }
 
         /* ★ MÀU KHÁC NHAU CHO TỪNG NHÓM ĐIỀU KIỆN */
-        /* Nhóm 0 — Hạng Vàng: vàng */
-        .td-page .pt thead th.h-cond-g0.h-cond-top { background: #B8860B; color: #fff; }
-        .td-page .pt thead th.h-cond-g0.h-cond-bot { background: #D4A017; color: #3a2600; }
-        .td-page .pt tbody td.d-cond-g0 { background: #FFF8DC; color: #4a3500; }
+        /* Nhóm 0 — Hạng Vàng: vàng đồng */
+        .td-page .pt thead th.h-cond-g0.h-cond-top { background: #C9A84C; color: #fff; }
+        .td-page .pt thead th.h-cond-g0.h-cond-bot { background: #DFC37A; color: #3a2800; }
+        .td-page .pt tbody td.d-cond-g0 { background: rgba(201,168,76,0.06); color: #7a5a00; }
 
-        /* Nhóm 1 — Hạng Bạch Kim: bạc */
-        .td-page .pt thead th.h-cond-g1.h-cond-top { background: #5C6B7A; color: #fff; }
-        .td-page .pt thead th.h-cond-g1.h-cond-bot { background: #8494A7; color: #1a2030; }
-        .td-page .pt tbody td.d-cond-g1 { background: #E8ECF2; color: #2a3040; }
+        /* Nhóm 1 — Hạng Bạch Kim: steel blue */
+        .td-page .pt thead th.h-cond-g1.h-cond-top { background: #2C4A6E; color: #fff; }
+        .td-page .pt thead th.h-cond-g1.h-cond-bot { background: #4A7AB5; color: #fff; }
+        .td-page .pt tbody td.d-cond-g1 { background: rgba(44,74,110,0.06); color: #1a3a60; }
 
         /* Nhóm 2 — Hạng Kim Cương: xanh diamond */
-        .td-page .pt thead th.h-cond-g2.h-cond-top { background: #2B5EA7; color: #fff; }
-        .td-page .pt thead th.h-cond-g2.h-cond-bot { background: #4A8AD4; color: #fff; }
-        .td-page .pt tbody td.d-cond-g2 { background: #DAE8FC; color: #1a2a50; }
+        .td-page .pt thead th.h-cond-g2.h-cond-top { background: #0D47A1; color: #fff; }
+        .td-page .pt thead th.h-cond-g2.h-cond-bot { background: #1976D2; color: #fff; }
+        .td-page .pt tbody td.d-cond-g2 { background: rgba(13,71,161,0.06); color: #0a2a60; }
 
         /* Nhóm 3 — xanh lá */
         .td-page .pt thead th.h-cond-g3.h-cond-top { background: #2E7D32; color: #fff; }
-        .td-page .pt thead th.h-cond-g3.h-cond-bot { background: #4CAF50; color: #1a3018; }
-        .td-page .pt tbody td.d-cond-g3 { background: #E0F2E0; color: #1a3520; }
+        .td-page .pt thead th.h-cond-g3.h-cond-bot { background: #4CAF50; color: #0a2010; }
+        .td-page .pt tbody td.d-cond-g3 { background: rgba(46,125,50,0.06); color: #1a4020; }
 
         /* Nhóm 4 — đỏ tía */
         .td-page .pt thead th.h-cond-g4.h-cond-top { background: #7B1FA2; color: #fff; }
         .td-page .pt thead th.h-cond-g4.h-cond-bot { background: #AB47BC; color: #fff; }
-        .td-page .pt tbody td.d-cond-g4 { background: #F0E0F8; color: #3a1050; }
+        .td-page .pt tbody td.d-cond-g4 { background: rgba(123,31,162,0.06); color: #4a1060; }
 
         /* ★ Cột điều kiện chứa "vé" — nền xanh lá */
         .td-page .pt thead th.h-cond-ve.h-cond-top { background: #2E7D32 !important; color: #fff !important; }
         .td-page .pt thead th.h-cond-ve.h-cond-bot { background: #43A047 !important; color: #fff !important; }
-        .td-page .pt tbody td.d-cond-ve { background: #C8E6C9 !important; color: #1B5E20 !important; font-weight: 700; white-space: normal !important; }
+        .td-page .pt tbody td.d-cond-ve { background: rgba(46,125,50,0.06) !important; color: #1a4020 !important; font-weight: 700; white-space: normal !important; }
 
         /* ★ Cột điều kiện chứa "%" — nền xanh lá nhạt */
         .td-page .pt thead th.h-cond-pct.h-cond-top { background: #2E7D32 !important; color: #fff !important; }
         .td-page .pt thead th.h-cond-pct.h-cond-bot { background: #43A047 !important; color: #fff !important; }
-        .td-page .pt tbody td.d-cond-pct { background: #E8F5E9 !important; color: #1B5E20 !important; font-weight: 700; white-space: normal !important; }
+        .td-page .pt tbody td.d-cond-pct { background: rgba(46,125,50,0.06) !important; color: #1a4020 !important; font-weight: 700; white-space: normal !important; }
 
         /* ★ CHỈ TIÊU / THỰC HIỆN — hàng header tầng trên cùng */
         .td-page .pt thead th.h-chi-tieu {
@@ -1927,7 +1933,7 @@
         /* === BODY: không xuống dòng, thu gọn === */
         .td-page .pt tbody tr { transition: background .15s; }
         .td-page .pt tbody tr:nth-child(even) td { }
-        .td-page .pt tbody tr:hover td { background: #e0f2fe !important; }
+        .td-page .pt tbody tr:hover td { background: rgba(59,130,246,0.08) !important; }
         .td-page .pt tbody tr.is-focus { background: #bfdbfe !important; }
         .td-page .pt tbody tr.is-focus td { color: #1e3a5f !important; font-weight: 700; }
         .td-page .pt tbody td {
@@ -1956,27 +1962,45 @@
         }
         .td-page .pt tbody td.d-info-left {
             background: #fff;
-            color: #111111;
+            color: #111;
             text-align: left !important;
-            padding-left: 4px;
+            padding-left: 8px;
         }
-        /* Nhóm thông tin (ngày cấp, sl tvv...): nền #CAE5E8, căn giữa */
+        /* Nhóm thông tin phụ (ngày cấp, sl tvv...): nền transparent, chữ #555 in nghiêng */
         .td-page .pt tbody td.d-text-info {
-            background: #CAE5E8;
-            color: #1e3a5f;
+            background: transparent;
+            color: #555;
             text-align: center;
+            font-style: italic;
         }
-        /* Nhóm số liệu: nền #CCCCFF, chữ #111111, căn giữa */
+        /* Cột textInfo cuối cùng (Người TD): nền transparent, chữ #555 in nghiêng, căn trái */
+        .td-page .pt tbody td.d-text-info-last {
+            background: transparent;
+            color: #555;
+            text-align: left !important;
+            padding-left: 8px;
+            font-style: italic;
+        }
+        /* Nhóm tên người (TVV, NTD, Họ tên...): nền transparent, chữ #111, căn trái, KHÔNG nghiêng */
+        .td-page .pt tbody td.d-name-left {
+            background: transparent;
+            color: #111;
+            text-align: left !important;
+            padding-left: 8px;
+            font-style: normal;
+            font-weight: 500;
+        }
+        /* Nhóm số liệu thực hiện: nền xanh lá cực mờ, chữ #1a3a1a weight 600 */
         .td-page .pt tbody td.d-numdata {
-            background: #CCCCFF;
-            color: #111111;
+            background: rgba(0,100,0,0.06);
+            color: #1a3a1a;
             text-align: center;
             font-weight: 600;
         }
-        /* Nhóm số liệu FYP: nền xanh nhạt, chữ in đậm */
+        /* Nhóm số liệu FYP: nền xanh ngọc mờ, chữ #0a3d20 weight 700 */
         .td-page .pt tbody td.d-numdata-fyp {
-            background: #D4EDDA;
-            color: #1a3a1a;
+            background: rgba(13,110,63,0.10);
+            color: #0a3d20;
             text-align: center;
             font-weight: 700;
         }
@@ -1988,19 +2012,19 @@
             font-weight: normal;
             font-style: italic;
         }
-        /* Nhóm số liệu IP tháng: nền nhạt hơn numdata, chữ #111111, căn giữa */
+        /* Nhóm số liệu IP tháng: nền xanh lá cực mờ, chữ #1a3a1a weight 600 */
         .td-page .pt tbody td.d-numdata-ip {
-            background: #DBDBFF;
-            color: #111111;
+            background: rgba(0,100,0,0.06);
+            color: #1a3a1a;
             text-align: center;
             font-weight: 600;
         }
-        /* Nhóm tỷ lệ % — ô > 0%: nền #FFFFCC, in đậm in nghiêng, căn giữa */
+        /* Nhóm tỷ lệ % — ô > 0%: transparent, chữ #555 in nghiêng weight 600 */
         .td-page .pt tbody td.d-percent-pos {
-            background: #FFFFCC;
-            color: #111111;
+            background: transparent;
+            color: #555;
             text-align: center;
-            font-weight: 700;
+            font-weight: 600;
             font-style: italic;
         }
         /* Nhóm tỷ lệ % — ô còn lại: in nghiêng, căn giữa, chữ xám */
@@ -2010,10 +2034,10 @@
             text-align: center;
             font-style: italic;
         }
-        /* Nhóm điều kiện: nền lemonchiffon, chữ #111111 */
+        /* Nhóm điều kiện: nền alpha 0.06, chữ đậm hơn màu header */
         .td-page .pt tbody td.d-cond {
-            background: lemonchiffon;
-            color: #111111;
+            background: rgba(201,168,76,0.06);
+            color: #7a5a00;
             text-align: center;
             font-weight: 600;
         }
@@ -2038,12 +2062,12 @@
             font-style: italic !important;
             font-weight: 400 !important;
         }
-        /* Phần thưởng / Tiền thưởng: nền lightyellow, chữ #000044 IN ĐẬM, căn giữa */
+        /* Phần thưởng / Tiền thưởng: nền vàng cực mờ, chữ #5a4a00 weight 700 */
         .td-page .pt tbody td.d-money {
-            background: lightyellow;
-            color: #000044;
+            background: rgba(255,215,0,0.08);
+            color: #5a4a00;
             text-align: center;
-            font-weight: 900;
+            font-weight: 700;
         }
         /* Thưởng có giá trị — in nghiêng */
         .td-page .thuong-highlight {
@@ -2065,7 +2089,9 @@
             .td-page .pst { min-width: 16px; max-width: 22px; font-size: 7px; padding: 1px 0 !important; }
             .td-page .pt th.pst-h { padding: 2px 0 !important; font-size: 7px; min-width: 16px; max-width: 22px; }
             .td-page .dat-badge { font-size: 7px; padding: 0 2px; }
-            .td-page .pt td.d-info-left { padding-left: 2px; }
+            .td-page .pt td.d-info-left { padding-left: 4px; }
+            .td-page .pt td.d-name-left { padding-left: 4px; }
+            .td-page .pt td.d-text-info-last { padding-left: 4px; }
             /* ★ Mobile: ngày tháng thu gọn hơn */
             .td-page .pt thead th .hdr-date { font-size: 0.7em; }
             .td-page .pt tbody td.d-date-wrap { font-size: 7px; line-height: 1.05; }
@@ -2145,7 +2171,9 @@
             .td-page .pt { font-size: 8px; }
             .td-page .pt thead th { padding: 2px 1px; font-size: 7px; overflow-wrap: break-word; word-break: break-word; line-height: 1.05; }
             .td-page .pt tbody td { padding: 1px 1px; font-size: 8px; line-height: 1.15; }
-            .td-page .pt td.d-info-left { padding-left: 2px; }
+            .td-page .pt td.d-info-left { padding-left: 4px; }
+            .td-page .pt td.d-name-left { padding-left: 4px; }
+            .td-page .pt td.d-text-info-last { padding-left: 4px; }
 
             .td-page .pop-ct { }
             .td-page .pop-ct > .ptw { margin-left: 6px; margin-right: 6px; }
@@ -2178,7 +2206,9 @@
             .td-page .pt { font-size: 11px; }
             .td-page .pt thead th { padding: 4px 3px; font-size: 9px; line-height: 1.15; }
             .td-page .pt tbody td { padding: 3px 3px; font-size: 10px; line-height: 1.25; }
-            .td-page .pt td.d-info-left { padding-left: 6px; }
+            .td-page .pt td.d-info-left { padding-left: 10px; }
+            .td-page .pt td.d-name-left { padding-left: 10px; }
+            .td-page .pt td.d-text-info-last { padding-left: 8px; }
             .td-page .pt .pst { font-size: 9px; min-width: 24px; }
             .td-page .pt th.pst-h { font-size: 9px; }
             .td-page .pt .dat-badge { padding: 1px 4px; font-size: 9px; }
@@ -4802,17 +4832,19 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                 }
                 function escH(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-                /* === PHÂN LOẠI CỘT — 6 NHÓM ===
+                /* === PHÂN LOẠI CỘT — 8 NHÓM ===
                    Quy tắc (từ người dùng):
-                   - Cột 1–4 (index 0–3): luôn là 'info' → nền header #000044, nền body trắng
+                   - Cột 1–4 (index 0–3): luôn là 'info' → nền header #000044, nền body #fff
                    - Từ cột 5 (index 4+) phân loại theo NỘI DUNG header:
-                     1) textInfo: thông tin phụ (ngày cấp, sl tvv, chức vụ, chặng...) → header #103667, body #CAE5E8
-                     2) numdata: số liệu (FYP, IP, AFYP, tổng...) → header #002200, body #CCCCFF
-                     3) percent: tỷ lệ % → header orangered, body #FFFFCC / xám
-                     4) condition: chỉ tiêu có ĐIỀU KIỆN (>=, <=, >, <, hoặc chữ "chỉ tiêu"/"điều kiện")
-                        → 2 hàng header: trên #BD6B09 (danh hiệu/mức), dưới #EC870E (chi tiết >=)
-                        → body lemonchiffon
-                     5) money: phần thưởng/tiền thưởng → header #000044 chữ vàng, body lightyellow
+                     1) textInfo: thông tin phụ (ngày cấp, sl tvv, chặng...) → header #1B3A5C, body transparent + #555 italic
+                     2) nameInfo: tên người (TVV, NTD, Họ tên...) → header #1B3A5C, body transparent + #111 left
+                     3) numdata: số liệu thực hiện → header #1a5c1a, body rgba(0,100,0,0.06)
+                     4) numdataFyp: FYP → header #0d6e3f, body rgba(13,110,63,0.10)
+                     5) numdataFyc: FYC → header #0d47a1, body transparent + #cc0000 italic
+                     6) numdataIp: IP tháng → header #1a5c1a, body rgba(0,100,0,0.06)
+                     7) percent: tỷ lệ % → header orangered, body transparent
+                     8) condition: chỉ tiêu có ĐIỀU KIỆN → header theo nhóm g0-g4, body alpha 0.06
+                     9) money: phần thưởng → header #000044 chữ #FFD700, body rgba(255,215,0,0.08)
                 */
                 /* Số cột đầu tiên thuộc nhóm "info" (STT + cột 1-4 gốc) */
                 /* Will be set after STT insertion */
@@ -4854,6 +4886,10 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
 
                     /* Thông tin phụ (cột 5+) */
                     if (/(ngay|thang lam|chang|so luong|sl tvv|ngay hieu luc|ngay cap|thoi gian|chuc vu|^cv$|thoi han|ngay bat dau|ngay ket thuc|han)/.test(k)) return 'textInfo';
+
+                    /* ★ Tên người (TVV, NTD, Người TD, Họ tên...) — căn trái, KHÔNG nghiêng */
+                    if (/^(tvv|ntd|ho ten|nguoi td|nguoi tuyen dung|nguoi tuyen dung|nguoi td)$/i.test(k)) return 'nameInfo';
+                    if (/\b(tvv|ntd|nguoi td|nguoi tuyen dung)\b/.test(k) && !/so luong|sl tvv|tvv hd/i.test(k)) return 'nameInfo';
 
                     /* ★ Số liệu FYP: nền xanh nhạt + in đậm */
                     if (/^fyp|fyp/i.test(raw) || /\bfyp\b/.test(k)) return 'numdataFyp';
@@ -4930,7 +4966,7 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                 /* ★ QUAN TRỌNG: Scan dữ liệu phát hiện cột condition bị phân loại sai */
                 /* Nếu cột chứa "11111" hoặc "Thiếu..." → chắc chắn là condition, dù header không có >= */
                 for (var sci = infoColCount; sci < dc; sci++) {
-                    if (colCats[sci] === 'condition' || colCats[sci] === 'money' || colCats[sci] === 'percent' || colCats[sci] === 'numdataIp' || colCats[sci] === 'numdataFyp' || colCats[sci] === 'numdataFyc') continue;
+                    if (colCats[sci] === 'condition' || colCats[sci] === 'money' || colCats[sci] === 'percent' || colCats[sci] === 'numdataIp' || colCats[sci] === 'numdataFyp' || colCats[sci] === 'numdataFyc' || colCats[sci] === 'nameInfo') continue;
                     var hasCondVal = false;
                     for (var sri = 1; sri < all.length; sri++) {
                         var sv = String(all[sri] && all[sri][sci] || '').trim();
@@ -5123,6 +5159,15 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                 var isCSTuyenNgang = programName && /tuyen\s*ngang/i.test(hk(programName));
                 /* ★ Thi đua TCS - PTB: không phân hạng, gộp tất cả cột điều kiện thành 1 nhóm */
                 var isTDTCSP = programName && /thi\s*đua.*tcs.*ptb|tcs.*ptb/i.test(hk(programName));
+
+                /* ★ Thi Đua TCS-PTB: Cột "Người TD" → phân loại lại thành textInfo */
+                if (isTDTCSP) {
+                    for (var tdci = 0; tdci < dc; tdci++) {
+                        if (colCats[tdci] === 'nameInfo' && /nguoi\s*td|người\s*td/i.test(String(hd[tdci] || ''))) {
+                            colCats[tdci] = 'textInfo';
+                        }
+                    }
+                }
 
                 /* ★ TRANG CHÍNH SÁCH KHÔNG PHÂN HẠNG → gộp tất cả cột điều kiện thành 1 nhóm */
                 /* ★ NGOẠI LỆ: CS Tuyển Ngang 2026 → KHÔNG gộp, sẽ xử lý riêng phía dưới */
@@ -5569,6 +5614,13 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                         } else {
                             hRow1 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
                         }
+                    } else if (cat === 'nameInfo') {
+                        hCls = 'h-name-info';
+                        if (hasChiThucGrouping) {
+                            hRow0 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
+                        } else {
+                            hRow1 += '<th class="' + hCls + '" rowspan="' + totalHeaderRows + '">' + hdrText + '</th>';
+                        }
                     } else if (cat === 'numdata') {
                         hCls = 'h-num';
                         if (inThucHienLK) {
@@ -5855,7 +5907,14 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                             tdCls = 'd-info-' + align;
                             if (c === sttColIdx) tdCls = 'pst';
                         } else if (cat2 === 'textInfo') {
-                            tdCls = 'd-text-info';
+                            /* ★ Kiểm tra nếu cột textInfo là cột cuối cùng → dùng d-text-info-last (căn trái) */
+                            var isLastTextInfo = true;
+                            for (var ltci = c + 1; ltci < dc; ltci++) {
+                                if (colCats[ltci] === 'textInfo' || colCats[ltci] === 'nameInfo') { isLastTextInfo = false; break; }
+                            }
+                            tdCls = isLastTextInfo ? 'd-text-info-last' : 'd-text-info';
+                        } else if (cat2 === 'nameInfo') {
+                            tdCls = 'd-name-left';
                         } else if (cat2 === 'numdata') {
                             tdCls = 'd-numdata';
                         } else if (cat2 === 'numdataFyp') {
@@ -5907,8 +5966,8 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                         /* ★ Chuẩn hóa thêm: bỏ dấu chấm (ngàn) để bắt "11.111" = 11111 */
                         var valNormNoDot = valNorm.replace(/\./g, '');
 
-                        if (cat2 === 'info') {
-                            /* Cột info: hiển thị bình thường */
+                        if (cat2 === 'info' || cat2 === 'nameInfo') {
+                            /* Cột info/nameInfo: hiển thị bình thường */
                             cellContent = escH(displayVal);
                         } else if (valNorm === '11111' || valNormNoDot === '11111') {
                             /* ★ Số 11111 (có thể có khoảng trắng) → luôn chuyển thành "Đạt" với dấu tích */
@@ -5980,6 +6039,9 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                     } else if (isTDTCSP && cgi === dc - 1 && /nguoi\s*tuyen\s*dung|người\s*tuyển\s*dụng|người\s*td|nguoi\s*td/i.test(String(hd[cgi] || ''))) {
                         /* ★ Thi đua TCS-PTB: cột NGƯỜI TD (cột cuối) → thu gọn, không phân tầng */
                         colgroupHtml += '<col style="width:45px;min-width:30px">';
+                    } else if (cgCat === 'nameInfo') {
+                        /* ★ Cột tên người (TVV, NTD...) → rộng hơn, căn trái */
+                        colgroupHtml += '<col style="min-width:60px;width:100px">';
                     } else if (cgCat === 'info' || cgi < infoColCount) {
                         /* Cột info: quy tắc — cột lẻ (Nhóm, Họ tên...) rộng hơn, cột chẵn hẹp */
                         if (cgi % 2 === 1) {
