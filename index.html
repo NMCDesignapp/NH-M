@@ -5347,7 +5347,9 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                             thucHienLKRange = { start: lkStartTN, end: lkEndTN };
                         }
                     }
-                } else if (condGroups.length > 0) {
+                } else if (condGroups.length > 0 && !isPolicyPage) {
+                    /* ★ Trang Chính Sách (trừ Tuyển Ngang) KHÔNG áp dụng CHỈ TIÊU/THỰC HIỆN grouping */
+                    /* Tuyển Ngang đã xử lý riêng ở trên, các chương trình khác chỉ cần 2 hàng header */
                     var ctFirstStart = condGroups[0].start;
                     var ctLastEnd = condGroups[condGroups.length - 1].end;
                     /* Trường hợp 1: condition columns theo sau bởi numdata/numdataFyp/numdataFyc/numdataIp/percent */
@@ -6060,6 +6062,12 @@ if (ok) { toast('Đã xóa', 'ok'); ccf(); await lfs(); }
                     } else if (cgInThucHienLK) {
                         /* ★ THỰC HIỆN LŨY KẾ group → cột bằng nhau */
                         colgroupHtml += '<col style="' + thucHienLKColWidth + '">';
+                    } else if (cgCat === 'condition') {
+                        /* ★ Cột condition (không thuộc CHỈ TIÊU/THỰC HIỆN group) → rộng vừa */
+                        colgroupHtml += '<col style="width:70px;min-width:45px">';
+                    } else if (cgCat === 'money') {
+                        /* ★ Cột tiền thưởng → rộng vừa */
+                        colgroupHtml += '<col style="width:65px;min-width:40px">';
                     } else if (dateColSet[cgi]) {
                         /* ★ Cột có ngày tháng → thu gọn */
                         colgroupHtml += '<col style="width:55px;min-width:40px">';
