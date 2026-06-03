@@ -3696,18 +3696,9 @@
             if (!board) return;
 
             var seen = {}, items = [];
-            /* Thông báo hiển thị cho tất cả các kỳ — không lọc theo ky */
+            /* Thông báo chỉ lấy từ cột thong_bao1 */
             DATA.forEach(function(x) {
-                var msg = (x.thong_bao1 || '').trim() || (x.thong_bao_1 || '').trim() || (x.thong_bao || '').trim();
-                if (!msg) {
-                    /* Fallback: scan all columns matching thong_bao* */
-                    for (var k in x) {
-                        if (k.indexOf('thong_bao') === 0 && (x[k] || '').trim()) {
-                            msg = (x[k] || '').trim();
-                            break;
-                        }
-                    }
-                }
+                var msg = (x.thong_bao1 || '').trim();
                 if (!msg) return;
                 if (!seen[msg]) { seen[msg] = true; items.push(msg); }
             });
@@ -4108,16 +4099,9 @@
             if (window.innerWidth < 900) { board.style.display = 'none'; return; }
 
             var seen = {}, items = [];
+            /* Thông báo chỉ lấy từ cột thong_bao1 */
             DATA.forEach(function(x) {
-                var msg = (x.thong_bao1 || '').trim() || (x.thong_bao_1 || '').trim() || (x.thong_bao || '').trim();
-                if (!msg) {
-                    for (var k in x) {
-                        if (k.indexOf('thong_bao') === 0 && (x[k] || '').trim()) {
-                            msg = (x[k] || '').trim();
-                            break;
-                        }
-                    }
-                }
+                var msg = (x.thong_bao1 || '').trim();
                 if (!msg) return;
                 if (!seen[msg]) { seen[msg] = true; items.push(msg); }
             });
