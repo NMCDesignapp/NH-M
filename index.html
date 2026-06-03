@@ -1055,7 +1055,7 @@
         /* --- NOTICE BOARD (vertical scrolling) --- */
         .notice-board {
             position: relative;
-            height: 340px;
+            height: 440px;
             overflow: hidden;
             margin-top: 20px;
             border-radius: 16px;
@@ -1091,20 +1091,20 @@
             animation-play-state: paused;
         }
         .notice-board-item {
-            padding: 16px 24px;
-            font-size: 20px;
+            padding: 20px 28px;
+            font-size: 24px;
             font-weight: 800;
             color: #f3cc73;
             border-bottom: 1px solid #ffffff0a;
             text-shadow: 0 0 14px #d4a84333;
-            min-height: 60px;
+            min-height: 72px;
             display: flex;
             align-items: center;
         }
         .notice-board-item i {
             color: #ffd56e;
-            font-size: 14px;
-            margin-right: 12px;
+            font-size: 18px;
+            margin-right: 14px;
             flex-shrink: 0;
         }
         .notice-board-empty {
@@ -1520,9 +1520,9 @@
             .nav-race,
             .nav-policy,
             .nav-clb { border: 1px solid #ffffff14; }
-            .notice-board { height: 260px; margin-top: 14px; border-radius: 12px; }
-            .notice-board-item { font-size: 16px; padding: 12px 16px; min-height: 48px; }
-            .notice-board-item i { font-size: 12px; margin-right: 8px; }
+            .notice-board { height: 360px; margin-top: 14px; border-radius: 12px; }
+            .notice-board-item { font-size: 20px; padding: 16px 20px; min-height: 60px; }
+            .notice-board-item i { font-size: 15px; margin-right: 10px; }
             .link-grid { gap: 7px; margin-top: 6px; }
             .link-btn {
                 min-height: 42px;
@@ -2278,9 +2278,10 @@
             }
             #nav-grid .nav-icon { font-size: 16px; }
 
-            /* ★ Notice board desktop — nhỏ gọn hơn */
-            .notice-board { height: auto !important; max-height: 400px; border-radius: 18px !important; }
-            .notice-board-item { font-size: 15px !important; padding: 13px 20px !important; min-height: 48px !important; }
+            /* ★ Notice board desktop */
+            .notice-board { height: auto !important; max-height: 560px; border-radius: 18px !important; }
+            .notice-board-item { font-size: 20px !important; padding: 18px 24px !important; min-height: 64px !important; }
+            .notice-board-item i { font-size: 16px !important; margin-right: 12px !important; }
 
             /* ★ Top 3 section on main page */
             .main-top3-section {
@@ -2563,8 +2564,9 @@
             }
 
             /* ★ Detail notice board */
-            #detail-notice-board.notice-board { height: auto !important; max-height: 400px; border-radius: 18px !important; }
-            #detail-notice-board .notice-board-item { font-size: 15px !important; padding: 13px 20px !important; min-height: 48px !important; }
+            #detail-notice-board.notice-board { height: auto !important; max-height: 560px; border-radius: 18px !important; }
+            #detail-notice-board .notice-board-item { font-size: 20px !important; padding: 18px 24px !important; min-height: 64px !important; }
+            #detail-notice-board .notice-board-item i { font-size: 16px !important; margin-right: 12px !important; }
         }
 
         /* PWA Install Banner */
@@ -3696,7 +3698,7 @@
             var seen = {}, items = [];
             /* Thông báo hiển thị cho tất cả các kỳ — không lọc theo ky */
             DATA.forEach(function(x) {
-                var msg = (x.thong_bao_1 || '').trim() || (x.thong_bao1 || '').trim() || (x.thong_bao || '').trim();
+                var msg = (x.thong_bao1 || '').trim() || (x.thong_bao_1 || '').trim() || (x.thong_bao || '').trim();
                 if (!msg) {
                     /* Fallback: scan all columns matching thong_bao* */
                     for (var k in x) {
@@ -4107,7 +4109,7 @@
 
             var seen = {}, items = [];
             DATA.forEach(function(x) {
-                var msg = (x.thong_bao_1 || '').trim() || (x.thong_bao1 || '').trim() || (x.thong_bao || '').trim();
+                var msg = (x.thong_bao1 || '').trim() || (x.thong_bao_1 || '').trim() || (x.thong_bao || '').trim();
                 if (!msg) {
                     for (var k in x) {
                         if (k.indexOf('thong_bao') === 0 && (x[k] || '').trim()) {
